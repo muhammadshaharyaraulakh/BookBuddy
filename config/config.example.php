@@ -7,16 +7,18 @@ define('INTERNAL_CALL', true); // Security flag for cron jobs
 require_once __DIR__ . "/../function/function.php";
 ProtectFile(__FILE__);
 
+// ─── SMTP CREDENTIALS (REPLACE WITH YOURS) ────────────────
 define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_USER', 'muhammadshaharyaraulakh@gmail.com');
-define('SMTP_PASSWORD', 'sfywhousshvcbytw');
+define('SMTP_USER', 'your_email@gmail.com');
+define('SMTP_PASSWORD', 'your_app_password_here');
 define('SMTP_PORT', 587);
 define('SMTP_SECURE', 'tls');
 
+// ─── DATABASE CREDENTIALS (REPLACE WITH YOURS) ────────────
 $host = "localhost";
 $dataBase = "BookBuddy";
-$db_user = "laraveluser";
-$db_password = "1234";
+$db_user = "root";
+$db_password = "";
 $charset = "utf8mb4";
 
 $dataSource = "mysql:host=$host;dbname=$dataBase;charset=$charset";

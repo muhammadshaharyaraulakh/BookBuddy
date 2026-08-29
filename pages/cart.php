@@ -55,18 +55,6 @@ require __DIR__."/../handlers/cartDetails.php";
 </section>
 
 <section class="discount-summary">
-    <div class="discount-section">
-        <h4>Discount Coupon</h4>
-        <form action="/handlers/coupon.php" method="post">
-            <div class="discount-form">
-                <input type="text" placeholder="Enter Coupon Code" name="coupon" style="text-transform: uppercase;">
-                <button>Apply Coupon</button>
-            </div>
-            <?php if($couponRow): ?>
-                <p>Applied Coupon: <strong><?= htmlspecialchars($couponRow->coupon_code) ?> (<?= $couponPercentage ?>%)</strong></p>
-            <?php endif; ?>
-        </form>
-    </div>
 
     <div class="summary-section">
         <h4>Cart Subtotal</h4>
@@ -80,10 +68,7 @@ require __DIR__."/../handlers/cartDetails.php";
                     <td>Shipping</td>
                     <td><?= $shipping ?>$</td>
                 </tr>
-                <tr>
-                    <td>Coupon</td>
-                    <td><?= htmlspecialchars($couponAmount) ?>$</td>
-                </tr>
+
                 <tr>
                     <td>Total</td>
                     <td><?= htmlspecialchars($total) ?>$</td>

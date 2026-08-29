@@ -6,22 +6,9 @@ $allCategories=getCategories($connection);
 
 <div id="content">
     
-    <div class="top-navbar">
-        <div class="nav-left">
-            <button type="button" id="sidebarCollapse" class="menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-        <div class="nav-right">
-            <div class="profile-preview">
-                <img src="/userImages/<?= $_SESSION['image'] ?>" alt="Admin">
-                <span><?= $_SESSION['name'] ?></span>
-            </div>
-        </div>
-    </div>
 
    <div class="form-container">
-    <form action="/admin/handlers/addBook.php" method="POST" enctype="multipart/form-data">
+    <form action="/admin/handlers/addBook.php" method="POST" enctype="multipart/form-data" class="ajax-form">
 
         <!-- Book Name & Stock -->
         <div class="form-row">

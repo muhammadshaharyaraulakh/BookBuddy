@@ -1,5 +1,5 @@
 # Book-Buddy — E-Commerce Book Store
-Book-Buddy is a full-stack multi-role E-Commerce Book Store built using **HTML, CSS, JavaScript, PHP, and MySQL**. It supports different user roles including **Buyer, Writer, and Admin**, providing a complete online bookstore management system.
+Book-Buddy is a full-stack multi-role E-Commerce Book Store built using **HTML, CSS, JavaScript, PHP, and MySQL**. It supports different user roles including **Buyer and Admin**, providing a complete online bookstore management system.
 
 ## Features
 
@@ -13,16 +13,10 @@ Book-Buddy is a full-stack multi-role E-Commerce Book Store built using **HTML, 
 * User registration and login
 * Profile and order history
 
-### Writer Panel
-
-* Secure writer login
-* Add new blogs
-* Edit and update blog details
-
 ### Admin Panel
 
 * Admin dashboard
-* Manage users (admins and writers)
+* Manage users (admins and buyers)
 * Manage books
 * Manage categories
 * Manage discounts and pricing

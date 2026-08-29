@@ -44,7 +44,7 @@ $allCategories = getCategories($connection);
       <h4>Book Categories</h4>
       <ul>
         <?php foreach (array_slice($allCategories, 0, 8) as $category): ?>
-          <li><a href="/pages/book-filter.html"><?= htmlspecialchars($category->title) ?></a></li>
+          <li><a href="/pages/books.php"><?= htmlspecialchars($category->title) ?></a></li>
         <?php endforeach; ?>
 
       </ul>
@@ -53,12 +53,11 @@ $allCategories = getCategories($connection);
       <h4>Quick Links</h4>
       <ul>
         <li><a href="/index.php"> Home </a></li>
-        <li><a href="pages/contact.html">Contact Us</a></li>
-        <li><a href="pages/book-filter.html">Products</a></li>
+        <li><a href="/pages/books.php">Products</a></li>
         <li><a href="/auth/login/login.php">Login</a></li>
         <li><a href="/auth/registration/registration.php">Sign Up</a></li>
-        <li><a href="pages/cart-item.html">Cart</a></li>
-        <li><a href="pages/checkout.html">Checkout</a></li>
+        <li><a href="/pages/cart.php">Cart</a></li>
+        <li><a href="/pages/checkout.php">Checkout</a></li>
       </ul>
     </div>
     <div class="our-store list">

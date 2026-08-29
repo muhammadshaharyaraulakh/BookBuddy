@@ -1593,3 +1593,39 @@ table .heading {
         width: 100%;
     }
 }
+
+@media only screen and (max-width: 320px) {
+    .filter .book-grid-container .book-collections .books {
+        grid-template-columns: 100% !important;
+    }
+    
+    .cart-item .product-table table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+
+    .discount-summary .discount-section input,
+    .discount-summary .summary-section {
+        width: 100%;
+    }
+
+    .checkout-section .checkout-form .form-container .input-field {
+        flex-direction: column;
+    }
+
+    .checkout-section .checkout-form,
+    .checkout-section .your-order,
+    .detail-payment .payment-form {
+        width: 100% !important;
+    }
+    
+    .contact .main .contact-form {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .contact .main .map iframe {
+        height: 200px;
+    }
+}

@@ -177,3 +177,55 @@ document.addEventListener("DOMContentLoaded", function () {
   updateTimer();
   setInterval(updateTimer, 1000);
 });
+
+// GLOBAL AJAX FORM INTERCEPTOR for User Side
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll('form.ajax-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const submitBtn = this.querySelector('button[type="submit"]') || this.querySelector('button');
+          if (submitBtn) submitBtn.disabled = true;
+
+          // Clear previous errors
+          this.querySelectorAll('.error-text').forEach(el => el.textContent = '');
+
+          const formData = new FormData(this);
+
+          fetch(this.action, {
+              method: this.method || 'POST',
+              body: formData,
+              headers: {
+                  'Accept': 'application/json'
+              }
+          })
+          .then(res => res.json().catch(() => ({ status: 'error', message: 'Invalid server response' })))
+          .then(data => {
+              if (data.status === 'success') {
+                  if (data.redirect) {
+                      window.location.href = data.redirect;
+                  } else {
+                      window.location.reload();
+                  }
+              } else {
+                  if (data.field) {
+                      const errorEl = this.querySelector(`#${data.field}-error`) || this.querySelector(`.error-${data.field}`);
+                      if (errorEl) {
+                          errorEl.textContent = data.message;
+                      } else {
+                          alert(data.message);
+                      }
+                  } else {
+                      alert(data.message || 'An error occurred.');
+                  }
+              }
+          })
+          .catch(err => {
+              console.error(err);
+              alert("A network error occurred. Please try again.");
+          })
+          .finally(() => {
+              if (submitBtn) submitBtn.disabled = false;
+          });
+      });
+  });
+});

@@ -20,13 +20,13 @@ SELECT
     b.*,
     d.id AS deal_id,
     d.discount_percentage AS deal_discount,
-    d.start_date,
-    d.end_date,
+    d.start_time,
+    d.end_time,
     ROUND(b.Original_Price * (100 - d.discount_percentage) / 100) AS deal_price
 FROM book b
 INNER JOIN deals d 
     ON b.id = d.book_id
-WHERE CURRENT_DATE BETWEEN d.start_date AND d.end_date
+WHERE CURRENT_TIMESTAMP < d.end_time
 ");
 
 $fetch->execute();
@@ -49,31 +49,10 @@ $customers = $statment->fetchAll(PDO::FETCH_OBJ);
 $totalUsers = count($customers);
 
 
-$statment = $connection->prepare("SELECT * FROM user WHERE role = :role");
-$statment->execute(['role' => 'writer']);
-$customers = $statment->fetchAll(PDO::FETCH_OBJ);
-$totalWriters = count($customers);
-
 $statments = $connection->prepare("SELECT * FROM book");
 $statments->execute();
 $books = $statments->fetchAll(PDO::FETCH_OBJ);
 $allBooks = count($books);
-
-
-$blogs = $connection->prepare("
-SELECT 
-    posts.*,
-    user.id AS user_id,
-    user.fullname,
-    user.profileImage,
-    posts.created_at AS post_created_at
-FROM posts
-INNER JOIN user
-    ON posts.author_id = user.id
-ORDER BY posts.created_at DESC
-");
-$blogs->execute();
-$allBlogs = $blogs->fetchAll(PDO::FETCH_OBJ);
 
 
 $fetch = $connection->prepare("SELECT b.*
@@ -97,7 +76,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
         Find your next favorite story inside today.
       </p>
       <div class="btns">
-        <a href="/pages/book-filter.html"><button>Explore Our Shop<i class="fa-solid fa-arrow-right"></i></button></a>
+        <a href="/pages/books.php"><button>Explore Our Shop<i class="fa-solid fa-arrow-right"></i></button></a>
         <button><a href="pages/promos.php" class="promo">See other Promos</a></button>
       </div>
     </div>
@@ -183,7 +162,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
         <?php foreach (array_slice($recommended, 0, 4) as $book): ?>
           <div class="book">
             <figure>
-              <a href="/pages/book-detail.html?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
+              <a href="/pages/book-detail.php?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
             </figure>
           </div>
         <?php endforeach; ?>
@@ -215,7 +194,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
         <?php foreach (array_slice($popular, 0, 4) as $book): ?>
           <div class="book">
             <figure>
-              <a href="/pages/book-detail.html?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
+              <a href="/pages/book-detail.php?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
             </figure>
           </div>
         <?php endforeach; ?>
@@ -253,7 +232,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
   </div>
   <div class="timer">
     <?php foreach (array_slice($deals, 0, 1) as $book): ?>
-      <p id="dealEnd"><?php echo $book->end_date; ?></p>
+      <p id="dealEnd"><?php echo $book->end_time; ?></p>
     <?php endforeach; ?>
 
 
@@ -279,12 +258,12 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
     ?>
       <div class="book">
         <div class="img">
-          <a href="Pages/book-detail.php?id=<?= $book->id ?>"><img src="/images/<?= $book->coverImage ?>" alt="bookImg" />
+          <a href="/pages/book-detail.php?id=<?= $book->id ?>"><img src="/images/<?= $book->coverImage ?>" alt="bookImg" />
           </a>
         </div>
-        <h5><?= $book->title ?></h5>
+        <h5><?= htmlspecialchars($book->title) ?></h5>
         <div class="price">
-          <span><?= $book->Discount_Price ?>$</span>
+          <span><?= $book->deal_price ?>$</span>
           <span><strike><?= $book->Original_Price ?>$</strike></span>
         </div>
       </div>
@@ -335,7 +314,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
       <div class="featured-book-card">
         <?php foreach (array_slice($featuredBooks, 0, 1) as $book): ?>
         <div class="img">
-          <a href="pages/book-detail.php?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
+          <a href="/pages/book-detail.php?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
         </div>
         <div class="card-description">
           <div class="card-header">
@@ -370,7 +349,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
               <strike><?= $book->Original_Price ?></strike>
             </div>
             <div class="cartbtn">
-              <button><a href="pages/book-detail.php?id=<?= $book->id ?>">Buy </a></button>
+              <button><a href="/pages/book-detail.php?id=<?= $book->id ?>">Buy </a></button>
             </div>
           </div>
         </div>
@@ -381,7 +360,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
       <div class="container">
         <?php foreach (array_slice($featuredBooks, 1, 7) as $book): ?>
         <div class="img">
-          <a href="pages/book-detail.php?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
+          <a href="/pages/book-detail.php?id=<?= $book->id ?>"><img src="images/<?= $book->coverImage ?>" alt="book" /></a>
         </div>
         <?php endforeach; ?>
       </div>
@@ -391,48 +370,6 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
   <div class="circle-2"></div>
 </section>
 
-<section class="news">
-
-  <div class="heading">
-    <div class="title">
-      <h4>Latest News</h4>
-      <p>
-        Reading opens the door to new worlds and deeper understanding. <br />
-         Each page invites curiosity, reflection, and growth.
-
-      </p>
-    </div>
-    <div class="btn">
-      <button><a href="/pages/allBlogs.php">View More</a> <i class="fa-solid fa-arrow-right"></i></a></button>
-    </div>
-  </div>
-  <div class="news-container">
-    <?php foreach (array_slice($allBlogs, 0, 4) as $blog): ?>
-    <div class="post">
-      <div class="img">
-        <img src="images/<?= $blog->thumbnail ?>" alt="post_img" />
-      </div>
-      <h5><?= $blog->title ?></h5>
-      <p>
-        <?= substr($blog->para_1, 0, 100) ?>...
-        <a href="/pages/blog.php?blog_id=<?= $blog->id ?>">Continue reading</a>
-      </p>
-      <div class="post-footer">
-        <div class="img">
-          <img src="images/<?= $blog->profileImage ?>" alt="blog_img" />
-        </div>
-        <div class="details">
-          <strong><?= $blog->fullname ?></strong>
-          <small><?= $blog->post_created_at ?></small>
-
-        </div>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-
-
-</section>
 
 <section class="countdown">
   <div class="container">
@@ -463,15 +400,7 @@ $featuredBooks = $fetch->fetchAll(PDO::FETCH_OBJ);
         <small>Our Stores</small>
       </div>
     </div>
-    <div class="writer counter">
-      <div class="icon">
-        <i class="fa-solid fa-feather"></i>
-      </div>
-      <div class="content">
-        <h4 class="count"><?= $totalWriters?></h4>
-        <small>Blog Writers</small>
-      </div>
-    </div>
+
   </div>
 </section>
 <section class="subscription">

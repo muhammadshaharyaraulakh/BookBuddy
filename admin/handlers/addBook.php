@@ -129,6 +129,7 @@ try {
     $response = [
         "status" => "success",
         "message" => "Book added successfully",
+        "redirect" => "/admin/adminPages/book.php",
         "field" => "general"
     ];
 

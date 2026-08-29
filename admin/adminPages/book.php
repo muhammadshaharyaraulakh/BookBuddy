@@ -15,19 +15,6 @@ $books = $fetchNoDeals->fetchAll(PDO::FETCH_OBJ);
 ?>
 
 <div id="content">
-    <div class="top-navbar">
-        <div class="nav-left">
-            <button type="button" id="sidebarCollapse" class="menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="page-title">Manage Books</div>
-        </div>
-        <div class="nav-right">
-            <div class="profile-preview">
-                <img src="https://via.placeholder.com/40" alt="Admin">
-            </div>
-        </div>
-    </div>
 
     <div class="category-filter">
         <button class="category-btn active" data-filter="all">All</button>
@@ -67,7 +54,7 @@ $books = $fetchNoDeals->fetchAll(PDO::FETCH_OBJ);
 
 
 
-                    <form action="/admin/handlers/deleteBook.php" method="post" class="bookform">
+                    <form action="/admin/handlers/deleteBook.php" method="post" class="bookform ajax-form">
                         <input type="hidden" name="id" value="<?= $book->id ?>">
                         <button class="btn btn-danger">Delete</button>
                     </form>
@@ -89,7 +76,7 @@ $books = $fetchNoDeals->fetchAll(PDO::FETCH_OBJ);
         <span class="close-modal" id="closeDiscount">&times;</span>
     </div>
 
-    <form action="/admin/handlers/applyDiscount.php" method="POST" class="discount-form">
+    <form action="/admin/handlers/applyDiscount.php" method="POST" class="discount-form ajax-form">
 
         <input type="hidden" name="book_id" id="bookIdField">
 

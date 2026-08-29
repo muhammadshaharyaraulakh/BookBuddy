@@ -18,20 +18,6 @@ $books = $fetch->fetchAll(PDO::FETCH_OBJ);
 
 <div id="content">
     
-    <div class="top-navbar">
-        <div class="nav-left">
-            <button type="button" id="sidebarCollapse" class="menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="page-title">Featured Books Manager</div>
-        </div>
-        <div class="nav-right">
-            <div class="profile-preview">
-                <img src="https://via.placeholder.com/40" alt="Admin">
-                <span>Admin</span>
-            </div>
-        </div>
-    </div>
 
 
     <div class="deal-page">
@@ -49,7 +35,7 @@ $books = $fetch->fetchAll(PDO::FETCH_OBJ);
                         <span class="new-price">$<?= $book->Discount_Price ?></span>
                     </div>
                     
-                    <form action="/admin/handlers/deleteFeatured.php" method="post">
+                    <form action="/admin/handlers/deleteFeatured.php" method="post" class="ajax-form">
                         <input type="hidden" name="bookId" value="<?= $book->id ?>">
                         <input hidden name="id" value="<?= $book->deal_id ?>">
                         <button class="btn btn-danger">Delete</button>

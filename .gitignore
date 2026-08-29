@@ -1,0 +1,22 @@
+# Database credentials
+config/config.php
+.env
+
+# Dependencies
+node_modules/
+vendor/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Uploads
+userImages/
+images/
+
+# Security & Locks
+storage/
+*.lock

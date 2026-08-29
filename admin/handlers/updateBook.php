@@ -152,7 +152,8 @@ try {
 
     $response = [
         "status"  => "success",
-        "message" => "Book updated successfully"
+        "message" => "Book updated successfully",
+        "redirect" => "/admin/adminPages/book.php"
     ];
 
 } catch (PDOException $e) {

@@ -42,7 +42,7 @@ require __DIR__."/../config/config.php";
                     <img src="/images/logo.png" alt="Logo" />
                 </div>
                 <div class="logo-header">
-                    <h4><a href="index.html">Book Buddy</a></h4>
+                    <h4><a href="/index.php">Book Buddy</a></h4>
                     <small>Book Store Website</small>
                     
                 </div>
@@ -55,16 +55,14 @@ require __DIR__."/../config/config.php";
                         <img src="images/logo.png" alt="Logo" />
                     </div>
                     <div class="logo-header">
-                        <h4><a href="index.html">Book Buddy</a></h4>
+                        <h4><a href="/index.php">Book Buddy</a></h4>
                         <small>Book Store Website</small>
                     </div>
 
                     <button class="close"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <li><a href="/index.php">Home</a></li>
-                <li><a href="pages/service.html">Service</a></li>
-                <li><a href="pages/contact.html">Contact</a></li>
-                <li><a href="pages/book-filter.html">Books</a></li>
+                <li><a href="/pages/books.php">Books</a></li>
                 <?php if(empty($_SESSION['id'])): ?>
                 <button class="login"><a href="/auth/login/login.php">Log In</a></button>
                 <button class="signup">
@@ -80,30 +78,21 @@ require __DIR__."/../config/config.php";
             <div class="nav-actions">
 
                 <div class="nav-end">
+                    <?php if (!empty($_SESSION['id'])) : ?>
                     <button class="likebtn">
                         <i class="fa-regular fa-heart"></i>
-                        <?php if (!empty($_SESSION['id'])) : ?>
-                          <span>2</span>
-                         <?php endif;?>
-                        
+                        <span>2</span>
                     </button>
                     <button class="cart">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <?php if (!empty($_SESSION['id'])) : ?>
-                          <span>2</span>
-                         <?php endif;?>
+                        <a href="/pages/cart.php" style="color: inherit;"><i class="fa-solid fa-cart-shopping"></i></a>
+                        <span>2</span>
                     </button>
                     <div class="profile-img">
-                        <?php if(empty($_SESSION['id'])): ?>
-                        <img
-                            src="/userImages/image.png"
-                            alt="Profile">
-                        <?php else: ?> 
-                             <img
-                            src="/userImages/<?= $_SESSION['image'] ?>"
-                            alt="Profile"> 
-                         <?php endif; ?>    
+                        <a href="/pages/profile.php">
+                            <img src="/userImages/<?= htmlspecialchars($_SESSION['image'] ?? 'image.png') ?>" alt="Profile">
+                        </a>
                     </div>
+                    <?php endif; ?>
                 </div>
                 <div class="hamburger">
                     <div class="line"></div>

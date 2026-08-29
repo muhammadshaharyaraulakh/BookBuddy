@@ -84,10 +84,7 @@ require __DIR__."/../handlers/cartDetails.php";
                     <td>Shipping</td>
                     <td><?= $shipping ?>$</td>
                 </tr>
-                <tr>
-                    <td>Coupon</td>
-                    <td><?= htmlspecialchars($couponAmount) ?>$</td>
-                </tr>
+
                 <tr>
                     <td>Total</td>
                     <td><?= htmlspecialchars($total) ?>$</td>
@@ -98,28 +95,18 @@ require __DIR__."/../handlers/cartDetails.php";
     </div>
         <div class="payment-section">
           <h4>Payment Method</h4>
-          <div class="payment-form">
+          <form action="/handlers/process_payment.php" method="POST" class="payment-form">
             <div class="payment-option">
-              <select>
-                <option>Paytm</option>
-                <option>Credit Card</option>
-                <option>Debit Card</option>
-                <option>Cash On Delivery</option>
+              <select name="payment_method" readonly style="pointer-events: none; background-color: #f5f5f5;">
+                <option value="Cash On Delivery" selected>Cash On Delivery (COD)</option>
               </select>
+              <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                  All online payments are disabled. Please pay with cash when your books are delivered.
+              </p>
             </div>
-            <div class="card-name">
-              <input type="text" placeholder="Card Holder Name">
-            </div>
-            <div class="card-no">
-              <input type="text" placeholder="Card Number">
-            </div>
-            <div class="card-meta">
-              <input type="text" placeholder="MM/YY" onfocus="(this.type='month')">
-              <input type="text" placeholder="CVV">
-              <input type="text" placeholder="Postal">
-            </div>
-            <button>Place Order Now</button>
-          </div>
+            
+            <button type="submit" style="margin-top: 20px;">Place Order Now</button>
+          </form>
         </div>
       </section>
       <script>

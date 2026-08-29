@@ -29,10 +29,10 @@ try {
         ':id'=>$id
     ]);
     $response = [
-    "success" => "error",
-    "message" => "Image is deleted Sucessfully",
-    "field" => "general"
-];
+        "status" => "success",
+        "message" => "Book deleted successfully",
+        "field" => "general"
+    ];
 }catch (PDOException $e) {
     $response['status']  = "error";
     $response['message'] = "Database Error: " . htmlspecialchars($e->getMessage());

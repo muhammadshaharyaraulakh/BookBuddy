@@ -12,7 +12,6 @@ try {
 
     $id = $_POST['id'] ?? null;
     $percentage = $_POST['percentage'] ?? null;
-    $duration = $_POST['days'] ?? null;
 
     // --- VALIDATION ---
 
@@ -26,22 +25,16 @@ try {
         throw new Exception("Please add a valid discount percentage (1–70)");
     }
 
-    if (!is_numeric($duration) || $duration <= 0 || $duration > 7) {
-        $response['field'] = 'days';
-        throw new Exception("Please add a valid duration (1–7 days)");
-    }
-
 
     // --- INSERT ---
     $insert = $connection->prepare("
-        INSERT INTO deals (book_id, discount_percentage, duration_days) 
-        VALUES (:id, :discount, :days)
+        INSERT INTO deals (book_id, discount_percentage) 
+        VALUES (:id, :discount)
     ");
 
     $result = $insert->execute([
         ':id' => $id,
-        ':discount' => $percentage,
-        ':days' => $duration
+        ':discount' => $percentage
     ]);
       
     if ($result) {

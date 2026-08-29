@@ -16,13 +16,12 @@ $fetchDeals = $connection->prepare("
         b.*,
         d.id AS deal_id,
         d.discount_percentage,
-        d.start_date,
-        d.duration_days,
-        DATE_ADD(d.start_date, INTERVAL d.duration_days DAY) AS end_date
+        d.start_time,
+        d.end_time
     FROM book b
     INNER JOIN deals d 
         ON b.id = d.book_id
-       AND CURRENT_DATE < DATE_ADD(d.start_date, INTERVAL d.duration_days DAY)
+       AND CURRENT_TIMESTAMP < d.end_time
 ");
 $fetchDeals->execute();
 $books = $fetchDeals->fetchAll(PDO::FETCH_OBJ);
@@ -32,31 +31,14 @@ $books = $fetchDeals->fetchAll(PDO::FETCH_OBJ);
 
 <div id="content">
     
-    <div class="top-navbar">
-        <div class="nav-left">
-            <button type="button" id="sidebarCollapse" class="menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="page-title">Weekly Deal Manager</div>
-        </div>
-        <div class="nav-right">
-            <div class="profile-preview">
-                <img src="https://via.placeholder.com/40" alt="Admin">
-                <span>Admin</span>
-            </div>
-        </div>
-    </div>
 
 
-    <!-- ======================= NEW PAGE WRAPPER ======================= -->
     <div class="deal-page">
-
-        <!-- ⭐ FORM CENTERED + MAX WIDTH ⭐ -->
         <div class="form-wrapper">
             <div class="form-container">
                 <h4 class="form-title">Set New Deal</h4>
 
-                <form method="post" action="/admin/handlers/deals.php">
+                <form method="post" action="/admin/handlers/deals.php" class="ajax-form">
                     <div class="form-group">
                         <label>Select Book</label>
                         <div class="input-wrapper">
@@ -64,8 +46,9 @@ $books = $fetchDeals->fetchAll(PDO::FETCH_OBJ);
                             <select name="id">
                                 <?php foreach($result as $book): ?>
                                     <option value="<?= $book->id ?>"><?= $book->title ?></option>
-                                <?php endforeach;?>
+                                <?php endforeach; ?>
                             </select>
+                            <div class="error id"></div>
                         </div>
                     </div>
 
@@ -74,18 +57,11 @@ $books = $fetchDeals->fetchAll(PDO::FETCH_OBJ);
                         <div class="input-wrapper">
                             
                             <input type="number" name="percentage" placeholder="70%">
+                            <div class="error percentage"></div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Duration Days</label>
-                        <div class="input-wrapper">
-                            
-                            <input type="number" name="days" placeholder="7">
-
-                        </div>
-                    </div>
-                    <?php if(count($books)==6) :?>
+                    <?php if(count($books)==4) :?>
                     <button type="submit" class="btn-submit orange" disabled>
                         Activate Deal
                     </button>
@@ -115,13 +91,9 @@ $books = $fetchDeals->fetchAll(PDO::FETCH_OBJ);
                         <span class="new-price">$<?= $book->Discount_Price ?></span>
                     </div>
                     <div class="countdown">
-                        <i class="fas fa-clock"></i> Ends in: <strong><?= $book-> end_date ?></strong>
+                        <i class="fas fa-clock"></i> Ends in: <strong><?= $book->end_time ?></strong>
                     </div>
-                    <form action="/admin/handlers/deleteDeal.php" method="post">
-                        <input type="hidden" name="bookId" value="<?= $book->id ?>">
-                        <input hidden name="id" value="<?= $book->deal_id ?>">
-                        <button class="btn btn-danger">End Deal</button>
-                    </form>
+
                 </div>
             </div>
         <?php endforeach; ?>

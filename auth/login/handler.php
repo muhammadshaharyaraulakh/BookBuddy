@@ -7,7 +7,7 @@ postRequest();
 $response = [
     "status" => "error",
     "message" => "Unexpected Error Occurred",
-    "feild" => "general"
+    "field" => "general"
 ];
 
 try {
@@ -15,12 +15,12 @@ try {
     $password = $_POST['password'] ?? '';
 
     if (empty($gmail) || !filter_var($gmail, FILTER_VALIDATE_EMAIL)) {
-        $response['feild'] = "gmail";
+        $response['field'] = "gmail";
         throw new Exception("Valid Gmail is Required");
     }
 
     if (empty($password)) {
-        $response['feild'] = "password";
+        $response['field'] = "password";
         throw new Exception("Password is required");
     }
 
@@ -29,11 +29,11 @@ try {
     $result = $search->fetch(PDO::FETCH_OBJ);
 
     if (empty($result)) {
-        $response['feild'] = "gmail";
+        $response['field'] = "gmail";
         throw new Exception("Account not Found");
     }
     if (!password_verify($password, $result->password)) {
-        $response['feild'] = "password";
+        $response['field'] = "password";
         throw new Exception("Wrong Password");
     } else {
         if (session_status() === PHP_SESSION_NONE) {
@@ -49,9 +49,9 @@ try {
         $redirects = [
             'user'      => '/index.php',
             'moderator' => '/moderator/dashboard.php',
-            'admin'     => '/admin/dashboard.php'
+            'admin'     => '/admin/adminPages/book.php'
         ];
-        $redirect = $redirects[$user->role] ?? '/index.php';
+        $redirect = $redirects[$result->role] ?? '/index.php';
         $response = [
             'status'   => "success",
             'message'  => "Login Successful",
@@ -61,7 +61,7 @@ try {
 } catch (PDOException $e) {
     $response['status']  = "error";
     $response['message'] = "Database Error: " . htmlspecialchars($e->getMessage());
-    $response['feild']   = "general";
+    $response['field']   = "general";
 } catch (Exception $e) {
     $response['status']  = "error";
     $response['message'] = htmlspecialchars($e->getMessage());
