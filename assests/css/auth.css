@@ -1,0 +1,712 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap');
+@import url('https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css');
+
+@font-face {
+    font-family: "Phosphor-Bold";
+    src:
+        url("https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/Phosphor-Bold.woff2") format("woff2"),
+        url("https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/Phosphor-Bold.woff") format("woff"),
+        url("https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/Phosphor-Bold.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+:root {
+    --neo-yellow: #FFDE00;
+    --neo-teal: #42CBB7;
+    --neo-pink: #FF00BF;
+    --neo-cream: #FFFDF0;
+    --neo-white: #FFFFFF;
+    --neo-black: #000000;
+}
+
+.auth-page,
+.neo-window,
+.auth-headline h2,
+.auth-headline p,
+.field-group label,
+.neo-input,
+.neo-btn,
+.auth-btn,
+.auth-bottom-switch,
+.auth-badge-pill,
+.window-label span,
+.timer-pill,
+.error-text,
+.general-alert-box,
+#file-chosen,
+.upload-btn-neo,
+.upload-label {
+    font-family: 'Space Grotesk', sans-serif !important;
+}
+
+i[class*="ph-"],
+i.ph-bold,
+.ph-bold,
+[class^="ph-"] {
+    font-family: "Phosphor-Bold" !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.auth-page a,
+.neo-window a,
+.field-group label a,
+.auth-bottom-switch a,
+.otp-status-bar a {
+    text-decoration: none !important;
+}
+
+body {
+    background-color: var(--neo-cream) !important;
+    background-image: none !important;
+}
+
+.auth-page,
+.login,
+.registration,
+.forgot-page,
+.otp-page,
+.reset-page {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 15px;
+    background-color: var(--neo-cream);
+    background-image: none !important;
+}
+
+.neo-window,
+.auth-card,
+.login-form,
+.registration-form {
+    width: 100%;
+    max-width: 460px;
+    background-color: var(--neo-white);
+    border: 2.5px solid var(--neo-black);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0px 0px var(--neo-black);
+    position: relative;
+    overflow: hidden;
+    padding: 0 !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.neo-window.wide,
+.auth-card-wide,
+.registration-form {
+    max-width: 520px;
+}
+
+.window-titlebar {
+    background-color: var(--neo-yellow);
+    border-bottom: 2.5px solid var(--neo-black);
+    padding: 11px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.window-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.window-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--neo-black);
+    display: inline-block;
+}
+
+.window-dot.dot-pink {
+    background-color: var(--neo-pink);
+}
+
+.window-dot.dot-yellow {
+    background-color: var(--neo-yellow);
+}
+
+.window-dot.dot-teal {
+    background-color: var(--neo-teal);
+}
+
+.window-label {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--neo-black);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.window-label i {
+    font-size: 17px;
+}
+
+.window-content {
+    padding: 30px 28px 26px 28px;
+}
+
+.auth-headline {
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.auth-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--neo-teal);
+    color: var(--neo-black);
+    border: 2px solid var(--neo-black);
+    box-shadow: 2px 2px 0px 0px var(--neo-black);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.auth-headline h2,
+.login h3,
+.registration h3 {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--neo-black);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin: 0 0 6px 0;
+}
+
+.auth-headline p,
+.login-form > p,
+.registration-form > p {
+    font-size: 13.5px;
+    color: #3f3f46;
+    font-weight: 500;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.neo-form,
+.input-form,
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.field-group,
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    position: relative;
+}
+
+.field-group label,
+.input-field label {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--neo-black);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.field-group label a,
+.input-field label a {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--neo-black);
+    text-transform: none;
+    letter-spacing: 0;
+    transition: color 0.15s ease;
+}
+
+.field-group label a:hover,
+.input-field label a:hover {
+    color: var(--neo-pink);
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-box i.input-icon {
+    position: absolute;
+    left: 13px;
+    font-size: 19px;
+    color: var(--neo-black);
+    pointer-events: none;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.neo-input,
+.input-field input,
+.input-form input {
+    width: 100%;
+    height: 46px;
+    padding: 8px 42px 8px 42px;
+    background-color: var(--neo-cream);
+    border: 2px solid var(--neo-black);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neo-black);
+    outline: none;
+    box-shadow: 2px 2px 0px 0px var(--neo-black);
+    transition: all 0.15s ease;
+}
+
+.neo-input:focus,
+.input-field input:focus,
+.input-form input:focus {
+    background-color: var(--neo-white);
+    border-width: 2.5px;
+    box-shadow: 4px 4px 0px 0px var(--neo-black);
+    transform: translate(-1px, -1px);
+}
+
+.neo-input.input-error,
+.input-field input.input-error {
+    border-color: var(--neo-black) !important;
+    background-color: #FFF0F7 !important;
+    box-shadow: 3px 3px 0px 0px var(--neo-pink) !important;
+}
+
+.eye-toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neo-black);
+    font-size: 19px;
+    z-index: 3;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.eye-toggle-btn:hover {
+    color: var(--neo-pink);
+    transform: scale(1.1);
+}
+
+.error-text {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+    background-color: var(--neo-pink);
+    color: #FFFFFF !important;
+    border: 1.5px solid var(--neo-black);
+    box-shadow: 2px 2px 0px 0px var(--neo-black);
+    font-size: 11px !important;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-top: 4px;
+    line-height: 1.3;
+    animation: popIn 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.error-text:not(:empty) {
+    display: inline-flex !important;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.general-alert-box {
+    display: none;
+    background-color: var(--neo-pink);
+    color: #FFFFFF;
+    border: 2px solid var(--neo-black);
+    box-shadow: 3px 3px 0px 0px var(--neo-black);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    align-items: center;
+    gap: 8px;
+}
+
+.general-alert-box:not(:empty) {
+    display: flex !important;
+}
+
+.file-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.upload-btn-neo,
+.upload-label {
+    background-color: var(--neo-yellow);
+    color: var(--neo-black) !important;
+    border: 2px solid var(--neo-black);
+    box-shadow: 2px 2px 0px 0px var(--neo-black);
+    padding: 9px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.upload-btn-neo:hover,
+.upload-label:hover {
+    background-color: var(--neo-teal);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px 0px var(--neo-black);
+}
+
+.upload-btn-neo:active,
+.upload-label:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px var(--neo-black);
+}
+
+#file-chosen {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--neo-black);
+    background-color: var(--neo-cream);
+    border: 1.5px solid var(--neo-black);
+    padding: 5px 10px;
+    border-radius: 6px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.otp-section {
+    margin: 10px 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.otp-grid {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.otp-box,
+input.otp-digit {
+    width: 48px;
+    height: 56px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace !important;
+    background-color: var(--neo-cream);
+    color: var(--neo-black);
+    border: 2.5px solid var(--neo-black);
+    border-radius: 8px;
+    box-shadow: 3px 3px 0px 0px var(--neo-black);
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+.otp-box:focus,
+input.otp-digit:focus {
+    background-color: var(--neo-yellow);
+    box-shadow: 4px 4px 0px 0px var(--neo-black);
+    transform: translate(-2px, -2px);
+}
+
+.otp-status-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--neo-black);
+    margin-top: 2px;
+}
+
+.otp-status-bar .timer-pill {
+    background-color: var(--neo-cream);
+    border: 1.5px solid var(--neo-black);
+    padding: 3px 8px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.otp-status-bar a {
+    color: var(--neo-black);
+    font-weight: 800;
+    transition: color 0.15s ease;
+}
+
+.otp-status-bar a:hover {
+    color: var(--neo-pink);
+}
+
+.neo-btn,
+.auth-btn,
+.input-form button[type="submit"],
+.input-form button {
+    width: 100%;
+    height: 48px;
+    background-color: var(--neo-teal);
+    color: var(--neo-black);
+    border: 2.5px solid var(--neo-black);
+    border-radius: 8px;
+    box-shadow: 4px 4px 0px 0px var(--neo-black);
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neo-btn.btn-yellow {
+    background-color: var(--neo-yellow);
+}
+
+.neo-btn.btn-pink {
+    background-color: var(--neo-pink);
+    color: #FFFFFF;
+}
+
+.neo-btn:hover,
+.auth-btn:hover,
+.input-form button[type="submit"]:hover {
+    background-color: var(--neo-yellow);
+    color: var(--neo-black);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--neo-black);
+}
+
+.neo-btn:active,
+.auth-btn:active,
+.input-form button[type="submit"]:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px 0px var(--neo-black);
+}
+
+.neo-btn:disabled,
+.auth-btn:disabled,
+.input-form button[type="submit"]:disabled {
+    background-color: #E5E5E5 !important;
+    color: #888888 !important;
+    border-color: #000000 !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: 2px 2px 0px 0px var(--neo-black) !important;
+}
+
+.auth-bottom-switch {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 2px dashed #D4D4D8;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #52525B;
+}
+
+.auth-bottom-switch a {
+    color: var(--neo-black);
+    font-weight: 800;
+    margin-left: 4px;
+    transition: color 0.15s ease;
+}
+
+.auth-bottom-switch a:hover {
+    color: var(--neo-pink);
+}
+
+@media only screen and (max-width: 480px) {
+    .auth-page,
+    .login,
+    .registration,
+    .forgot-page,
+    .otp-page,
+    .reset-page {
+        padding: 16px 10px;
+    }
+
+    .neo-window,
+    .auth-card,
+    .login-form,
+    .registration-form {
+        box-shadow: 4px 4px 0px 0px var(--neo-black);
+        border-width: 2px;
+    }
+
+    .window-content {
+        padding: 20px 16px 18px 16px;
+    }
+
+    .auth-headline h2,
+    .login h3,
+    .registration h3 {
+        font-size: 20px;
+    }
+
+    .otp-grid {
+        gap: 5px;
+    }
+
+    .otp-box,
+    input.otp-digit {
+        width: 38px;
+        height: 48px;
+        font-size: 20px;
+        box-shadow: 2px 2px 0px 0px var(--neo-black);
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .window-content {
+        padding: 16px 12px;
+    }
+
+    .otp-box,
+    input.otp-digit {
+        width: 34px;
+        height: 44px;
+        font-size: 18px;
+    }
+
+    .neo-input,
+    .input-field input,
+    .input-form input {
+        height: 42px;
+        font-size: 13px;
+        padding-left: 36px;
+    }
+
+    .input-box i.input-icon {
+        left: 10px;
+        font-size: 16px;
+    }
+}
+
+.forbidden-page .neo-window {
+    max-width: 520px;
+}
+
+.error-giant-code {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 5.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--neo-pink);
+    text-align: center;
+    margin: 0.5rem 0 1rem;
+    text-shadow: 4px 4px 0px var(--neo-black);
+    letter-spacing: -2px;
+}
+
+.pill-pink {
+    background-color: var(--neo-pink);
+    color: var(--neo-white);
+}
+
+.btn-pink {
+    background-color: var(--neo-pink);
+    color: var(--neo-white);
+}
+
+.btn-pink:hover {
+    background-color: #e000a8;
+}
+
+.forbidden-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.forbidden-actions .neo-btn {
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+@media only screen and (max-width: 480px) {
+    .error-giant-code {
+        font-size: 4rem;
+        text-shadow: 3px 3px 0px var(--neo-black);
+    }
+
+    .forbidden-actions {
+        gap: 0.6rem;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .error-giant-code {
+        font-size: 3.2rem;
+        text-shadow: 2.5px 2.5px 0px var(--neo-black);
+    }
+
+    .forbidden-actions .neo-btn {
+        height: 44px;
+        font-size: 14px;
+        padding: 0 12px;
+    }
+}
+

@@ -9,7 +9,7 @@ ProtectFile(__FILE__);
 
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_USER', 'muhammadshaharyaraulakh@gmail.com');
-define('SMTP_PASSWORD', 'sfywhousshvcbytw');
+define('SMTP_PASSWORD', 'rsthorskeuxvesvv');
 define('SMTP_PORT', 587);
 define('SMTP_SECURE', 'tls');
 

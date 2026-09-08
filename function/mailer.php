@@ -53,3 +53,52 @@ function sendDealExpiredEmail(string $toEmail, string $toName, string $bookTitle
         return false;
     }
 }
+
+function sendOtpEmail(string $toEmail, string $toName, string $otp): bool 
+{
+    if (!filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
+        error_log("Invalid email: $toEmail");
+        return false;
+    }
+
+    $safeName = htmlspecialchars($toName, ENT_QUOTES, 'UTF-8');
+
+    try {
+        $mail = new PHPMailer(true);
+
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;   
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASSWORD;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+        $mail->Timeout    = 2;
+
+        $mail->setFrom(SMTP_USER, 'BookBuddy');
+        $mail->addAddress($toEmail, $toName);
+        $mail->isHTML(true);
+        $mail->Subject = 'Password Reset Verification Code';
+        $mail->Body    = "
+            <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;'>
+                <h2 style='color: #6c5dd4; text-align: center; margin-bottom: 20px;'>BookBuddy</h2>
+                <p style='color: #333; font-size: 15px;'>Hello <strong>{$safeName}</strong>,</p>
+                <p style='color: #555; font-size: 14px; line-height: 1.5;'>You requested to reset your password. Use the 6 digit verification code below to proceed:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <span style='font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #6c5dd4; background: #f2f0fe; padding: 14px 28px; border-radius: 8px; display: inline-block; border: 1px dashed #6c5dd4;'>{$otp}</span>
+                </div>
+                <p style='color: #777; font-size: 13px;'>This code will expire in 5 minutes. If you did not request this password reset, please ignore this email.</p>
+                <hr style='border: none; border-top: 1px solid #eeeeee; margin: 25px 0;'>
+                <p style='color: #aaa; font-size: 11px; text-align: center;'>BookBuddy Online Bookstore</p>
+            </div>
+        ";
+        $mail->AltBody = "Hello {$safeName}, your verification code is {$otp}. It will expire in 5 minutes.";
+
+        $mail->send();
+        return true;
+
+    } catch (Exception $e) {
+        error_log('[Mailer OTP] Failed to send to ' . $toEmail . ': ' . $e->getMessage());
+        return false;
+    }
+}

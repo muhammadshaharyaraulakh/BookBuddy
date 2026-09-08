@@ -11,20 +11,18 @@ if (php_sapi_name() !== 'cli' && !defined('INTERNAL_CALL')) {
 $lockFile = __DIR__ . '/../storage/expire.lock';
 if (file_exists($lockFile)) {
     $lockAge = time() - filemtime($lockFile);
-    if ($lockAge < 300) { // 5 minute se kam purana hai
-        exit; // Exit silently if already running
+    if ($lockAge < 300) {
+        return;
     }
 }
-file_put_contents($lockFile, time()); // Lock create karo
+file_put_contents($lockFile, time());
 
 try {
-    // Already included config.php so connection exists if INTERNAL_CALL
     if (!isset($connection)) {
         require_once __DIR__ . '/../config/config.php';
     }
     require_once __DIR__ . '/../function/mailer.php';
 
-    // ─── STEP 1: Atomic lock — sirf ek process handle kare ───
     $token = bin2hex(random_bytes(16));
 
     $stmt = $connection->prepare("
@@ -36,9 +34,8 @@ try {
     $stmt->execute([$token]);
 
     if ($stmt->rowCount() === 0) {
-        // Koi expired deal nahi mili
         unlink($lockFile);
-        exit;
+        return;
     }
 
     // ─── STEP 2: Sirf apna token wali deals lo ────────────

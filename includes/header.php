@@ -15,6 +15,7 @@ require __DIR__."/../config/config.php";
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
     <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
@@ -35,70 +36,3 @@ require __DIR__."/../config/config.php";
 </head>
 
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <div class="img">
-                    <img src="/images/logo.png" alt="Logo" />
-                </div>
-                <div class="logo-header">
-                    <h4><a href="/index.php">Book Buddy</a></h4>
-                    <small>Book Store Website</small>
-                    
-                </div>
-            </div>
-
-            <ul class="nav-list">
-
-                <div class="logo logo-header-heisenberger">
-                    <div class="img">
-                        <img src="images/logo.png" alt="Logo" />
-                    </div>
-                    <div class="logo-header">
-                        <h4><a href="/index.php">Book Buddy</a></h4>
-                        <small>Book Store Website</small>
-                    </div>
-
-                    <button class="close"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <li><a href="/index.php">Home</a></li>
-                <li><a href="/pages/books.php">Books</a></li>
-                <?php if(empty($_SESSION['id'])): ?>
-                <button class="login"><a href="/auth/login/login.php">Log In</a></button>
-                <button class="signup">
-                    <i class="fa-solid fa-user"></i><a href="/auth/registration/registration.php">Sign Up</a>
-                </button>
-                <?php else: ?>
-                <button class="signup">
-                    <a href="/auth/logout.php">Logout</a>
-                </button>
-                <?php endif; ?>    
-            </ul>
-
-            <div class="nav-actions">
-
-                <div class="nav-end">
-                    <?php if (!empty($_SESSION['id'])) : ?>
-                    <button class="likebtn">
-                        <i class="fa-regular fa-heart"></i>
-                        <span>2</span>
-                    </button>
-                    <button class="cart">
-                        <a href="/pages/cart.php" style="color: inherit;"><i class="fa-solid fa-cart-shopping"></i></a>
-                        <span>2</span>
-                    </button>
-                    <div class="profile-img">
-                        <a href="/pages/profile.php">
-                            <img src="/userImages/<?= htmlspecialchars($_SESSION['image'] ?? 'image.png') ?>" alt="Profile">
-                        </a>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <div class="hamburger">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                </div>
-            </div>
-        </nav>
-    </header>

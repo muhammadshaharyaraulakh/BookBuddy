@@ -14,7 +14,7 @@ require __DIR__ . "/../../includes/header.php";
 ?>
 <link rel="stylesheet" href="/assests/css/auth.css" />
 
-<section class="auth-page login">
+<section class="auth-page forgot-page">
     <div class="neo-window">
         <div class="window-titlebar">
             <div class="window-dots">
@@ -23,23 +23,20 @@ require __DIR__ . "/../../includes/header.php";
                 <span class="window-dot dot-teal"></span>
             </div>
             <div class="window-label">
-                <i class="ph-bold ph-sign-in"></i>
-                <span>BookBuddy Login</span>
+                <i class="ph-bold ph-key"></i>
+                <span>Password Recovery</span>
             </div>
         </div>
 
         <div class="window-content">
             <div class="auth-headline">
-                <div class="auth-badge-pill">
-                    <i class="ph-bold ph-user"></i> Member Access
-                </div>
-                <h2>Welcome Back</h2>
-                <p>Enter your account credentials to access your library sanctuary.</p>
+                <h2>Forgot Password</h2>
+                <p>Enter your registered email address and we will dispatch a 6 digit verification code to help you reset your credentials.</p>
             </div>
 
             <div class="general-alert-box" id="general-error"></div>
 
-            <form action="/auth/login/handler.php" method="post" class="neo-form ajax-form">
+            <form action="/auth/forgot/handler.php" method="post" class="neo-form ajax-form">
                 <div class="field-group">
                     <label for="email">
                         <span><i class="ph-bold ph-envelope-simple"></i> Email Address</span>
@@ -51,27 +48,12 @@ require __DIR__ . "/../../includes/header.php";
                     <span class="error-text" id="gmail-error"></span>
                 </div>
 
-                <div class="field-group">
-                    <label for="password">
-                        <span><i class="ph-bold ph-lock-key"></i> Password</span>
-                        <a href="/forgot">Forgot Password?</a>
-                    </label>
-                    <div class="input-box">
-                        <i class="ph-bold ph-lock-key input-icon"></i>
-                        <input type="password" name="password" id="password" class="neo-input" placeholder="Enter your password" required autocomplete="current-password">
-                        <button type="button" class="eye-toggle-btn" aria-label="Toggle password visibility">
-                            <i class="ph-bold ph-eye"></i>
-                        </button>
-                    </div>
-                    <span class="error-text" id="password-error"></span>
-                </div>
-
                 <button type="submit" class="neo-btn btn-yellow">
-                    Log In <i class="ph-bold ph-arrow-right"></i>
+                    Send Verification Code <i class="ph-bold ph-paper-plane-tilt"></i>
                 </button>
 
                 <div class="auth-bottom-switch">
-                    Need a new account? <a href="/register">Create Account</a>
+                    Remember your password? <a href="/login">Back to Login</a>
                 </div>
             </form>
         </div>

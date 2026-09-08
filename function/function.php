@@ -161,6 +161,7 @@ function register(PDO $connection, string $role) {
             $_SESSION['id']   = $newID;
             $_SESSION['gmail'] = $gmail;
             $_SESSION['image']= $image_name;
+            $_SESSION['role'] = $role;
         }
 
         $response = [
