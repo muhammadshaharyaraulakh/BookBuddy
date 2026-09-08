@@ -16,17 +16,15 @@ try {
         throw new Exception("Category title cannot be empty");
     }
 
-    // Check if category already exists
     $check = $connection->prepare("SELECT * FROM categories WHERE title = :title");
     $check->execute(['title' => $title]);
-    $result = $check->fetch(PDO::FETCH_OBJ); // fetch a single row
+    $result = $check->fetch(PDO::FETCH_OBJ);
 
     if ($result) {
         $response['field'] = 'title';
         throw new Exception("Category already exists");
     }
 
-    // Insert new category
     $insert = $connection->prepare("INSERT INTO categories(title) VALUES(:title)");
     $insert->execute([':title' => $title]);
 

@@ -23,12 +23,23 @@ try {
         throw new Exception("Discount must be between 0 and 50%");
     }
 
-    // Check if book exists
     $fetch = $connection->prepare("SELECT id FROM book WHERE id=:id LIMIT 1");
     $fetch->execute([':id' => $id]);
 
     if(!$fetch->fetch(PDO::FETCH_OBJ)){
         throw new Exception("Book not found");
+    }
+
+    $checkDeal = $connection->prepare("
+        SELECT id FROM deals 
+        WHERE book_id = :id 
+          AND status = 'active' 
+          AND CURRENT_TIMESTAMP < end_time 
+        LIMIT 1
+    ");
+    $checkDeal->execute([':id' => $id]);
+    if ($checkDeal->fetch()) {
+        throw new Exception("Cannot apply discount because this book is currently in the daily deal.");
     }
 
     $update = $connection->prepare("

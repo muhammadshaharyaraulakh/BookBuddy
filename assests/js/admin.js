@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    
-    // Initialize Flatpickr for modern date selection
     const dateInputs = document.querySelectorAll('.publish_date');
     if (dateInputs.length > 0) {
         flatpickr(".publish_date", {
@@ -11,46 +9,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Select Elements
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const closeBtn = document.getElementById('close-sidebar');
-    const openBtn = document.getElementById('sidebarCollapse'); // The Hamburger in your main page
-
-    // 1. Function to OPEN
-    function openMenu() {
-        sidebar.classList.add('active');
-        overlay.classList.add('active');
-    }
-
-    // 2. Function to CLOSE
-    function closeMenu() {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-    }
-
-    // 3. Event Listeners
-    if(openBtn) {
-        openBtn.addEventListener('click', openMenu);
-    }
-    
-    if(closeBtn) {
-        closeBtn.addEventListener('click', closeMenu);
-    }
-    
-    if(overlay) {
-        overlay.addEventListener('click', closeMenu); // Click outside to close
-    }
-
-    // Optional: Close menu when a link is clicked (good for mobile)
-    const links = document.querySelectorAll('.components li a');
-    links.forEach(link => {
-        link.addEventListener('click', closeMenu);
-    });
-});
-document.addEventListener("DOMContentLoaded", function() {
-    
-    // --- SIDEBAR LOGIC ---
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const closeBtn = document.getElementById('close-sidebar');
@@ -66,29 +24,30 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    if(openBtn) openBtn.addEventListener('click', () => toggleMenu(true));
-    if(closeBtn) closeBtn.addEventListener('click', () => toggleMenu(false));
-    if(overlay) overlay.addEventListener('click', () => toggleMenu(false));
+    if (openBtn) openBtn.addEventListener('click', () => toggleMenu(true));
+    if (closeBtn) closeBtn.addEventListener('click', () => toggleMenu(false));
+    if (overlay) overlay.addEventListener('click', () => toggleMenu(false));
 
-    // --- CATEGORY FILTER LOGIC ---
+    const links = document.querySelectorAll('.components li a');
+    links.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+
     const filterBtns = document.querySelectorAll('.category-btn');
     const bookCards = document.querySelectorAll('.book-card');
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // 1. Remove active class from all buttons
             filterBtns.forEach(b => b.classList.remove('active'));
-            // 2. Add active class to clicked button
             btn.classList.add('active');
 
             const filterValue = btn.getAttribute('data-filter');
 
-            // 3. Loop through books and hide/show based on category
             bookCards.forEach(card => {
                 const category = card.getAttribute('data-category');
 
                 if (filterValue === 'all' || filterValue === category) {
-                    card.style.display = 'flex'; // Use flex to maintain layout
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }
@@ -96,22 +55,20 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // --- AJAX FORM INTERCEPTOR ---
     const ajaxForms = document.querySelectorAll('.ajax-form');
 
     ajaxForms.forEach(form => {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Clear previous errors
             const errorDivs = form.querySelectorAll('.error');
             errorDivs.forEach(div => div.innerText = '');
 
             const submitBtn = form.querySelector('button[type="submit"]') || form.querySelector('button');
             const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
-            if(submitBtn) {
+            if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+                submitBtn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> ...';
             }
 
             try {
@@ -148,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.error(err);
                 alert("An unexpected error occurred. Check console for details.");
             } finally {
-                if(submitBtn) {
+                if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnText;
                 }
@@ -193,14 +150,45 @@ document.addEventListener("DOMContentLoaded", function() {
                         this.style.display = 'none';
                         item.querySelector('.edit-category-btn').style.display = 'inline-block';
                     } else {
-                        alert(data.message);
+                        showCategoryError(data.message || 'Error updating category');
                     }
                 } catch (err) {
-                    alert('Error updating category');
+                    showCategoryError('Error updating category. Please try again.');
                 }
             } else {
-                alert('Category name cannot be empty');
+                showCategoryError('Category name cannot be empty');
             }
         });
     });
+
+    function showCategoryError(message) {
+        const toast = document.getElementById('categoryErrorToast');
+        const msgEl = document.getElementById('categoryErrorMessage');
+        if (!toast || !msgEl) {
+            alert(message);
+            return;
+        }
+        msgEl.textContent = message;
+        toast.classList.add('active');
+
+        if (window.categoryToastTimeout) {
+            clearTimeout(window.categoryToastTimeout);
+        }
+        window.categoryToastTimeout = setTimeout(() => {
+            toast.classList.remove('active');
+        }, 5000);
+    }
+
+    const closeToastBtn = document.getElementById('closeToast');
+    if (closeToastBtn) {
+        closeToastBtn.addEventListener('click', () => {
+            const toast = document.getElementById('categoryErrorToast');
+            if (toast) {
+                toast.classList.remove('active');
+            }
+            if (window.categoryToastTimeout) {
+                clearTimeout(window.categoryToastTimeout);
+            }
+        });
+    }
 });

@@ -44,7 +44,7 @@ require __DIR__ . "/includes/header.php";
 
                 <?php if (!empty($_SESSION['id'])): ?>
                     <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                        <a href="/admin/adminPages/book.php" class="neo-btn btn-yellow">
+                        <a href="/books" class="neo-btn btn-yellow">
                             Admin Dashboard <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     <?php endif; ?>

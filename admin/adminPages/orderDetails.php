@@ -4,10 +4,9 @@ require __DIR__."/../../includes/dashboardHeader.php";
 
 $order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$order_id) {
-    die("<div id='content'><h2>Invalid Order ID</h2><a href='/admin/adminPages/order.php' class='btn btn-primary'>Back to Orders</a></div>");
+    die("<div id='content'><h2>Invalid Order ID</h2><a href='/adminorders' class='btn btn-primary'>Back to Orders</a></div>");
 }
 
-// Fetch Order & User Info
 $orderQuery = $connection->prepare("
     SELECT o.*, u.fullname, u.email, a.address, a.city, a.province, a.postcode, a.contact as shipping_contact 
     FROM orders o
@@ -19,10 +18,9 @@ $orderQuery->execute([':id' => $order_id]);
 $order = $orderQuery->fetch(PDO::FETCH_OBJ);
 
 if (!$order) {
-    die("<div id='content'><h2>Order Not Found</h2><a href='/admin/adminPages/order.php' class='btn btn-primary'>Back to Orders</a></div>");
+    die("<div id='content'><h2>Order Not Found</h2><a href='/adminorders' class='btn btn-primary'>Back to Orders</a></div>");
 }
 
-// Fetch Order Items
 $itemsQuery = $connection->prepare("
     SELECT oi.*, b.title, b.coverImage 
     FROM order_items oi
@@ -35,7 +33,7 @@ $items = $itemsQuery->fetchAll(PDO::FETCH_OBJ);
 <div id="content">
     <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
         <h2>Order Details #ORD-<?= htmlspecialchars($order->id) ?></h2>
-        <a href="/admin/adminPages/order.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+        <a href="/adminorders" class="btn btn-secondary"><i class="ph-bold ph-arrow-left"></i> Back to Orders</a>
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">

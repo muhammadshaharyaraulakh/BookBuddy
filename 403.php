@@ -7,6 +7,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 http_response_code(403);
 require __DIR__ . "/includes/header.php";
+
+$isLoggedIn = !empty($_SESSION['id']) || !empty($_SESSION['name']);
+$isAdmin = !empty($_SESSION['role']) && $_SESSION['role'] === 'admin';
 ?>
 <link rel="stylesheet" href="/assests/css/auth.css" />
 
@@ -31,30 +34,47 @@ require __DIR__ . "/includes/header.php";
                 <div class="auth-badge-pill pill-pink">
                     <i class="ph-bold ph-prohibit"></i> Access Restricted
                 </div>
-                <h2>Already Logged In</h2>
-                <p>
-                    <?php if (!empty($_SESSION['name'])): ?>
-                        Signed in as <strong><?= htmlspecialchars($_SESSION['name']) ?></strong> (<?= htmlspecialchars($_SESSION['role'] ?? 'user') ?>). Guest authentication pages are restricted while logged in.
-                    <?php else: ?>
-                        You do not have permission to access authentication routes while an active account session exists.
-                    <?php endif; ?>
-                </p>
+                <?php if ($isAdmin): ?>
+                    <h2>Restricted Resource</h2>
+                    <p>Signed in as <strong><?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?></strong>. This resource is restricted or unavailable.</p>
+                <?php elseif ($isLoggedIn): ?>
+                    <h2>Administrator Required</h2>
+                    <p>Signed in as <strong><?= htmlspecialchars($_SESSION['name']) ?></strong> (<?= htmlspecialchars($_SESSION['role'] ?? 'user') ?>). You do not have administrator permissions to access this page or resource.</p>
+                <?php else: ?>
+                    <h2>Access Denied</h2>
+                    <p>You do not have permission to view this resource. An authorized administrator account is required.</p>
+                <?php endif; ?>
             </div>
 
             <div class="forbidden-actions">
-                <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <a href="/admin/adminPages/book.php" class="neo-btn btn-yellow">
+                <?php if ($isAdmin): ?>
+                    <a href="/books" class="neo-btn btn-yellow">
                         Admin Dashboard <i class="ph-bold ph-arrow-right"></i>
                     </a>
+                    <a href="/index.php" class="neo-btn btn-teal">
+                        Return to Home <i class="ph-bold ph-house"></i>
+                    </a>
+                    <a href="/logout" class="neo-btn btn-pink">
+                        Logout Account <i class="ph-bold ph-sign-out"></i>
+                    </a>
+                <?php elseif ($isLoggedIn): ?>
+                    <a href="/index.php" class="neo-btn btn-yellow">
+                        Return to Home <i class="ph-bold ph-house"></i>
+                    </a>
+                    <a href="/shop" class="neo-btn btn-teal">
+                        Browse Books <i class="ph-bold ph-book-open"></i>
+                    </a>
+                    <a href="/logout" class="neo-btn btn-pink">
+                        Logout Account <i class="ph-bold ph-sign-out"></i>
+                    </a>
+                <?php else: ?>
+                    <a href="/login" class="neo-btn btn-yellow">
+                        Sign In <i class="ph-bold ph-sign-in"></i>
+                    </a>
+                    <a href="/index.php" class="neo-btn btn-teal">
+                        Return to Home <i class="ph-bold ph-house"></i>
+                    </a>
                 <?php endif; ?>
-
-                <a href="/index.php" class="neo-btn btn-teal">
-                    Return to Home <i class="ph-bold ph-house"></i>
-                </a>
-
-                <a href="/auth/logout.php" class="neo-btn btn-pink">
-                    Logout Account <i class="ph-bold ph-sign-out"></i>
-                </a>
             </div>
         </div>
     </div>

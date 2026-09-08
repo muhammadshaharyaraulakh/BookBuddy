@@ -1,13 +1,9 @@
 <?php
-// handlers/expireDeals.php
-
-// ─── SECURITY CHECK 1: Direct browser access band karo ───
 if (php_sapi_name() !== 'cli' && !defined('INTERNAL_CALL')) {
     http_response_code(403);
     die('Access Denied');
 }
 
-// ─── SECURITY CHECK 2: Script dobara chale to rok do ─────
 $lockFile = __DIR__ . '/../storage/expire.lock';
 if (file_exists($lockFile)) {
     $lockAge = time() - filemtime($lockFile);

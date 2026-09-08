@@ -53,13 +53,13 @@ $orders = $fetchOrders->fetchAll(PDO::FETCH_OBJ);
                                     <button class="btn btn-primary" type="submit">Update</button>
                                 </form>
 
-                                <a href="/admin/adminPages/orderDetails.php?id=<?= $order->id ?>" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-eye"></i>
+                                <a href="/orderdetails?id=<?= $order->id ?>" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                                    <i class="ph-bold ph-eye"></i>
                                 </a>
 
                                 <form action="/admin/handlers/deleteOrder.php" method="POST" class="ajax-form" onsubmit="return confirm('Are you sure you want to delete this order?');">
                                     <input type="hidden" name="order_id" value="<?= $order->id ?>">
-                                    <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-danger" type="submit"><i class="ph-bold ph-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

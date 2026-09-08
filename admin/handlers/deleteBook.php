@@ -17,6 +17,19 @@ try {
     if(empty($result)){
         throw new Exception("Book doesnot exists"); 
     }
+
+    $checkDeal = $connection->prepare("
+        SELECT id FROM deals 
+        WHERE book_id = :id 
+          AND status = 'active' 
+          AND CURRENT_TIMESTAMP < end_time 
+        LIMIT 1
+    ");
+    $checkDeal->execute([':id' => $id]);
+    if ($checkDeal->fetch()) {
+        throw new Exception("This book cannot be deleted while it is active in the daily deal.");
+    }
+
     $image=$result->coverImage;
     if ($image) {
         $image_path = __DIR__ . "/../../images/" . $image;

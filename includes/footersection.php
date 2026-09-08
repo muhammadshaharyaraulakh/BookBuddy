@@ -1,87 +1,62 @@
-<?php
-$allCategories = getCategories($connection);
-?>
-<footer>
-  <div class="container">
-    <div class="logo-description">
-      <div class="logo">
-        <div class="img">
-          <img src="/images/logo.png" alt="logo" />
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand-col">
+            <h3 class="footer-logo-title">BookBuddy</h3>
+            <p class="footer-desc">
+                Your trusted sanctuary for timeless literature, contemporary releases, and profound ideas that challenge and enrich the human mind.
+            </p>
+            <div class="footer-social-row">
+                <a href="#" class="social-circle-btn" aria-label="Twitter">
+                    <i class="ph-bold ph-twitter-logo"></i>
+                </a>
+                <a href="#" class="social-circle-btn" aria-label="Facebook">
+                    <i class="ph-bold ph-facebook-logo"></i>
+                </a>
+                <a href="#" class="social-circle-btn" aria-label="Instagram">
+                    <i class="ph-bold ph-instagram-logo"></i>
+                </a>
+                <a href="#" class="social-circle-btn" aria-label="GitHub">
+                    <i class="ph-bold ph-github-logo"></i>
+                </a>
+            </div>
         </div>
-        <div class="title">
-          <h4>Book Buddy</h4>
-          <small>Book Store Website</small>
+
+        <div class="footer-col">
+            <h4 class="footer-col-heading">Company</h4>
+            <ul class="footer-nav-list">
+                <li><a href="/index.php">About Us</a></li>
+                <li><a href="/shop.php">Book Store</a></li>
+                <li><a href="/shop.php?filter=featured">Features</a></li>
+                <li><a href="/index.php#deals">Daily Deals</a></li>
+                <li><a href="/shop.php">Community</a></li>
+            </ul>
         </div>
-      </div>
-      <div class="logo-body">
-        <p>
-          Discover a wide range of quality books, carefully curated for readers of all ages.
-          Dive into stories, knowledge, and adventures that inspire and entertain.
-        </p>
-      </div>
-      <div class="social-links">
-        <h4>Follow Us</h4>
-        <ul class="links">
-          <li>
-            <a href=""><i class="fa-brands fa-facebook-f"></i></a>
-          </li>
-          <li>
-            <a href=""><i class="fa-brands fa-youtube"></i></a>
-          </li>
-          <li>
-            <a href=""><i class="fa-brands fa-twitter"></i></a>
-          </li>
-          <li>
-            <a href=""><i class="fa-brands fa-linkedin"></i></a>
-          </li>
-          <li>
-            <a href=""><i class="fa-brands fa-instagram"></i></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="categories list">
-      <h4>Book Categories</h4>
-      <ul>
-        <?php foreach (array_slice($allCategories, 0, 8) as $category): ?>
-          <li><a href="/index.php"><?= htmlspecialchars($category->title) ?></a></li>
-        <?php endforeach; ?>
 
-      </ul>
-    </div>
-    <div class="quick-links list">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="/index.php"> Home </a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Sign Up</a></li>
-      </ul>
-    </div>
-    <div class="our-store list">
-      <h4>Our Store</h4>
-      <div class="map" style="margin-top: 1rem">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d54955.191000350685!2d72.9069055!3d30.5860291!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1766900681993!5m2!1sen!2s"
-          height="70"
-          style="width: 100%; border: none; border-radius: 5px;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+        <div class="footer-col">
+            <h4 class="footer-col-heading">Help</h4>
+            <ul class="footer-nav-list">
+                <li><a href="#">Customer Support</a></li>
+                <li><a href="#">Delivery Details</a></li>
+                <li><a href="#">Terms &amp; Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Track Shipment</a></li>
+            </ul>
+        </div>
 
-      </div>
-      <ul>
-        <li>
-          <a href=""><i class="fa-solid fa-location-dot"></i>Harappa Station ,Sahiwal ,57160 ,Punjab Pakistan</a>
-        </li>
-        <li>
-          <a href=""><i class="fa-solid fa-phone"></i>+92 3451440747</a>
-        </li>
-        <li>
-
-          <a><i class="fa-solid fa-envelope"></i>supportbookbuddy@gmail.com</a>
-        </li>
-      </ul>
+        <div class="footer-col">
+            <h4 class="footer-col-heading">FAQ</h4>
+            <ul class="footer-nav-list">
+                <li><a href="#">Account Access</a></li>
+                <li><a href="#">Manage Deliveries</a></li>
+                <li><a href="#">Order Tracking</a></li>
+                <li><a href="#">Cash On Delivery</a></li>
+                <li><a href="#">Return Policy</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
+
+    <div class="footer-bottom-bar">
+        <span>BookBuddy &copy; 2026. All Rights Reserved.</span>
+        <span>Crafted for passionate readers across Pakistan.</span>
+    </div>
 </footer>

@@ -16,7 +16,21 @@ try {
         throw new Exception("Invalid Category ID.");
     }
 
-    // Fetch all posts for this category
+    $checkCategoryDeal = $connection->prepare("
+        SELECT d.id 
+        FROM deals d 
+        JOIN book b ON d.book_id = b.id 
+        WHERE b.category_id = :id 
+          AND d.status = 'active' 
+          AND CURRENT_TIMESTAMP < d.end_time 
+        LIMIT 1
+    ");
+    $checkCategoryDeal->execute([':id' => $category_id]);
+    if ($checkCategoryDeal->fetch()) {
+        http_response_code(400);
+        throw new Exception("This category cannot be deleted because a book in this category is currently in the daily deal.");
+    }
+
     $AllPosts = $connection->prepare("SELECT coverImage FROM book WHERE category_id = :id");
     $AllPosts->execute([':id' => $category_id]);
     $posts = $AllPosts->fetchAll(PDO::FETCH_OBJ);
@@ -32,11 +46,9 @@ try {
         }
     }
 
-    // Delete posts
     $deletePosts = $connection->prepare("DELETE FROM book WHERE category_id = :id");
     $deletePosts->execute([':id' => $category_id]);
 
-    // Delete category
     $deleteCategory = $connection->prepare("DELETE FROM categories WHERE id = :id");
     $deleteCategory->execute([':id' => $category_id]);
 

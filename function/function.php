@@ -5,6 +5,30 @@ function render404(){
     header("Location: /404.php");
     die();
 }
+function render403(){
+    http_response_code(403);
+    header("Location: /403.php");
+    die();
+}
+function protectAdmin(){
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        render403();
+    }
+}
+function checkAdminAccess(){
+    if (php_sapi_name() === 'cli') {
+        return;
+    }
+    $script = $_SERVER['SCRIPT_FILENAME'] ?? $_SERVER['PHP_SELF'] ?? '';
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (str_contains($script, '/admin/adminPages/') || str_contains($script, '/admin/handlers/') || str_contains($uri, '/admin/adminPages/') || str_contains($uri, '/admin/handlers/')) {
+        protectAdmin();
+    }
+}
+checkAdminAccess();
 if(!defined('SECURE_ACCESS')){
     render404();
 }

@@ -49,7 +49,7 @@ try {
         $redirects = [
             'user'      => '/index.php',
             'moderator' => '/moderator/dashboard.php',
-            'admin'     => '/admin/adminPages/book.php'
+            'admin'     => '/books'
         ];
         $redirect = $redirects[$result->role] ?? '/index.php';
         $response = [

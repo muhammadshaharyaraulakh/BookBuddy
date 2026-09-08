@@ -15,7 +15,6 @@ try {
         throw new Exception("Invalid book");
     }
 
-    // Get existing book
     $fetch = $connection->prepare("SELECT * FROM book WHERE id=:id LIMIT 1");
     $fetch->execute([':id' => $id]);
     $result = $fetch->fetch(PDO::FETCH_OBJ);
@@ -24,7 +23,18 @@ try {
         throw new Exception("Book not found");
     }
 
-    // Read inputs
+    $checkDeal = $connection->prepare("
+        SELECT id FROM deals 
+        WHERE book_id = :id 
+          AND status = 'active' 
+          AND CURRENT_TIMESTAMP < end_time 
+        LIMIT 1
+    ");
+    $checkDeal->execute([':id' => $id]);
+    if ($checkDeal->fetch()) {
+        throw new Exception("This book cannot be updated while it is active in the daily deal.");
+    }
+
     $name            = trim($_POST['book_name'] ?? '');
     $stock           = $_POST['stock'] ?? '';
     $author          = trim($_POST['author'] ?? '');
@@ -37,7 +47,6 @@ try {
     $description_2   = trim($_POST['description_2'] ?? '');
     $imageFile       = $_FILES['cover_image'] ?? null;
 
-    // ---------- VALIDATION ----------
     if (empty($name)) {
         $response['field'] = "book_name";
         throw new Exception("Title is required");
@@ -58,7 +67,6 @@ try {
         throw new Exception("ISBN must be a 13-digit number");
     }
 
-    // ISBN must be unique but ignore current book
     $checkISBN = $connection->prepare("
         SELECT id FROM book WHERE ISBN=:isbn AND id!=:id LIMIT 1
     ");
@@ -88,7 +96,6 @@ try {
         throw new Exception("Description 1 required");
     }
 
-    // ---------- HANDLE IMAGE ----------
     $newImageName = $result->coverImage;  
 
     if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
@@ -118,7 +125,6 @@ try {
         }
     }
 
-    // ---------- UPDATE QUERY ----------
     $update = $connection->prepare("
         UPDATE book SET
             title               = :name,
@@ -153,7 +159,7 @@ try {
     $response = [
         "status"  => "success",
         "message" => "Book updated successfully",
-        "redirect" => "/admin/adminPages/book.php"
+        "redirect" => "/books"
     ];
 
 } catch (PDOException $e) {
