@@ -43,7 +43,9 @@ $items = $itemsQuery->fetchAll(PDO::FETCH_OBJ);
             <p><strong>Email:</strong> <?= htmlspecialchars($order->email) ?></p>
             <hr style="margin: 10px 0; border: none; border-top: 1px solid #eee;">
             <h3>Shipping Address</h3>
-            <?php if($order->address): ?>
+            <?php if(!empty($order->shipping_address_text)): ?>
+                <p><strong>Locked Snapshot:</strong> <?= htmlspecialchars($order->shipping_address_text) ?></p>
+            <?php elseif($order->address): ?>
                 <p><strong>Address:</strong> <?= htmlspecialchars($order->address) ?></p>
                 <p><strong>City/Province:</strong> <?= htmlspecialchars($order->city) ?>, <?= htmlspecialchars($order->province) ?> (<?= htmlspecialchars($order->postcode) ?>)</p>
                 <p><strong>Shipping Phone:</strong> <?= htmlspecialchars($order->shipping_contact) ?></p>

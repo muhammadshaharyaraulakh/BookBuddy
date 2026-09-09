@@ -12,6 +12,7 @@ $shipping = 0.0;
 $total = 0.0;
 $hasStockIssue = false;
 $cartNotifications = [];
+$userAddresses = [];
 
 if ($user_id) {
     // Section 1: Fetch Raw Cart Entries with Catalog Join
@@ -114,5 +115,15 @@ if ($user_id) {
     // Section 6: Grand Total Calculation
     $allTotal = round($allTotal, 2);
     $total = round($allTotal + $shipping, 2);
+
+    // Section 7: Fetch User Delivery Addresses
+    $addrStmt = $connection->prepare("
+        SELECT id, user_id, province, district, city, address, postcode, contact 
+        FROM user_address 
+        WHERE user_id = :uid 
+        ORDER BY id DESC
+    ");
+    $addrStmt->execute([':uid' => $user_id]);
+    $userAddresses = $addrStmt->fetchAll(PDO::FETCH_OBJ);
 }
 ?>

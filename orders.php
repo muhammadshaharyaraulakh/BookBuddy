@@ -137,6 +137,15 @@ require __DIR__ . "/includes/navigationbar.php";
                     </div>
                 <?php endif; ?>
 
+                <?php if (!empty($order->shipping_address_text)): ?>
+                    <div style="margin-top: 14px; padding: 10px 14px; background: #F8FAFC; border: 1.5px solid #000; border-radius: 6px; font-size: 13px; color: #1F2937;">
+                        <div style="font-weight: 800; display: flex; align-items: center; gap: 6px; margin-bottom: 2px; color: #000;">
+                            <i class="ph-bold ph-map-pin" style="color: var(--neo-teal);"></i> Delivery Address (Locked for this order):
+                        </div>
+                        <div style="font-weight: 600;"><?= htmlspecialchars($order->shipping_address_text) ?></div>
+                    </div>
+                <?php endif; ?>
+
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1.5px solid #E5E7EB;">
                     <span style="font-size: 13px; font-weight: 700; color: #6B7280;">Order Total</span>
                     <span style="font-size: 18px; font-weight: 800; color: var(--neo-black);">$<?= number_format((float)$order->total_amount, 2) ?></span>

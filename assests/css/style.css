@@ -2805,3 +2805,415 @@ button, input, select, textarea {
     box-shadow: none !important;
     transform: none !important;
 }
+
+/* ==========================================================================
+   Neo-Brutalist Address Modals & Selection System
+   ========================================================================== */
+.neo-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+}
+
+.neo-modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.neo-modal-dialog {
+    background: var(--neo-white);
+    border: 3px solid var(--neo-black);
+    border-radius: var(--neo-radius);
+    box-shadow: 8px 8px 0px var(--neo-black);
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.94) translateY(12px);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.neo-modal-backdrop.active .neo-modal-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.neo-modal-header {
+    padding: 16px 20px;
+    border-bottom: 3px solid var(--neo-black);
+    background: var(--neo-yellow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.neo-modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--neo-black);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.neo-modal-close-btn {
+    width: 36px;
+    height: 36px;
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    background: var(--neo-pink);
+    color: var(--neo-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px var(--neo-black);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+}
+
+.neo-modal-close-btn:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--neo-black);
+}
+
+.neo-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--neo-white);
+}
+
+.neo-modal-footer {
+    padding: 14px 20px;
+    border-top: 3px solid var(--neo-black);
+    background: var(--neo-gray-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Form Styles inside Modal */
+.neo-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 520px) {
+    .neo-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.neo-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.neo-form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.neo-form-label {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--neo-black);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.neo-form-label .req-star {
+    color: var(--neo-pink);
+}
+
+.neo-form-input,
+.neo-form-select,
+.neo-form-textarea {
+    width: 100%;
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    padding: 10px 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    background: var(--neo-cream);
+    color: var(--neo-black);
+    outline: none;
+    box-shadow: 3px 3px 0px var(--neo-black);
+    transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.neo-form-input:focus,
+.neo-form-select:focus,
+.neo-form-textarea:focus {
+    background: var(--neo-white);
+    box-shadow: 4px 4px 0px var(--neo-black);
+}
+
+.neo-form-input.is-invalid,
+.neo-form-select.is-invalid,
+.neo-form-textarea.is-invalid {
+    border-color: var(--neo-pink) !important;
+    background: #FFF1F2 !important;
+    box-shadow: 3px 3px 0px #BE123C !important;
+}
+
+.neo-form-hint {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--neo-gray-muted);
+}
+
+.neo-field-error {
+    font-size: 11px;
+    font-weight: 800;
+    color: #BE123C;
+    display: none;
+    align-items: center;
+    gap: 4px;
+}
+
+.neo-field-error.active {
+    display: flex;
+}
+
+/* Saved Address Cards & Expandable Details */
+.address-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.neo-address-card {
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    background: var(--neo-white);
+    box-shadow: 3px 3px 0px var(--neo-black);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.neo-address-card:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px var(--neo-black);
+}
+
+.neo-address-card.selected {
+    background: #FEF3C7;
+    border-color: var(--neo-black);
+    box-shadow: 5px 5px 0px var(--neo-black);
+}
+
+.address-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.address-card-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--neo-black);
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.address-custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid var(--neo-black);
+    border-radius: 999px;
+    background: var(--neo-white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 1px 1px 0px var(--neo-black);
+    transition: all 0.15s ease;
+}
+
+.neo-address-card.selected .address-custom-radio {
+    background: var(--neo-black);
+}
+
+.neo-address-card.selected .address-custom-radio::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--neo-yellow);
+}
+
+.address-details-toggle {
+    background: var(--neo-white);
+    border: 2px solid var(--neo-black);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--neo-black);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 1.5px 1.5px 0px var(--neo-black);
+    transition: all 0.12s ease;
+}
+
+.address-details-toggle:hover {
+    background: var(--neo-cream);
+}
+
+.address-details-toggle i {
+    transition: transform 0.2s ease;
+}
+
+.address-details-toggle.open i {
+    transform: rotate(180deg);
+}
+
+.address-expandable-details {
+    display: none;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1.5px dashed #000;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.address-expandable-details.open {
+    display: flex;
+}
+
+.address-detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.address-detail-item i {
+    font-size: 16px;
+    color: var(--neo-black);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.address-detail-label {
+    font-weight: 800;
+    color: var(--neo-black);
+    min-width: 80px;
+}
+
+/* Modal Action Buttons */
+.neo-btn-cancel {
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--neo-white);
+    color: var(--neo-black);
+    cursor: pointer;
+    box-shadow: 3px 3px 0px var(--neo-black);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.neo-btn-cancel:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px var(--neo-black);
+}
+
+.neo-btn-confirm {
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    padding: 10px 22px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--neo-yellow);
+    color: var(--neo-black);
+    cursor: pointer;
+    box-shadow: 4px 4px 0px var(--neo-black);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.neo-btn-confirm:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0px var(--neo-black);
+}
+
+.neo-btn-confirm:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--neo-gray-muted);
+    box-shadow: none;
+    transform: none;
+}
+
+.neo-btn-add-new-addr {
+    border: 2.5px dashed var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--neo-cream);
+    color: var(--neo-black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.neo-btn-add-new-addr:hover {
+    background: var(--neo-yellow);
+    border-style: solid;
+    box-shadow: 3px 3px 0px var(--neo-black);
+}

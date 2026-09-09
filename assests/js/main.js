@@ -566,4 +566,318 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ==========================================================================
+    // Section 6: Neo-Brutalist Address Verification & Order Placement Flow
+    // ==========================================================================
+    const checkoutBtnActive = document.getElementById('btn-checkout-active');
+    const selectAddrModal = document.getElementById('selectAddressModal');
+    const addAddrModal = document.getElementById('addAddressModal');
+    const addressListContainer = document.getElementById('addressListContainer');
+    const addAddressForm = document.getElementById('addAddressForm');
+    const btnConfirmPlaceOrder = document.getElementById('btn-confirm-place-order');
+    const btnSwitchToAddAddr = document.getElementById('btn-switch-to-add-addr');
+
+    const openModal = (modal) => {
+        if (!modal) return;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeModal = (modal) => {
+        if (!modal) return;
+        modal.classList.remove('active');
+        if (!document.querySelector('.neo-modal-backdrop.active')) {
+            document.body.style.overflow = '';
+        }
+    };
+
+    // Close handlers for select modal
+    document.querySelectorAll('.btn-close-select-addr-modal').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(selectAddrModal));
+    });
+
+    // Close handlers for add modal
+    document.querySelectorAll('.btn-close-add-addr-modal').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(addAddrModal));
+    });
+
+    // Close modal on backdrop click
+    [selectAddrModal, addAddrModal].forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal(selectAddrModal);
+            closeModal(addAddrModal);
+        }
+    });
+
+    // Switch from Select Modal to Add Address Modal
+    if (btnSwitchToAddAddr) {
+        btnSwitchToAddAddr.addEventListener('click', () => {
+            closeModal(selectAddrModal);
+            openModal(addAddrModal);
+        });
+    }
+
+    // Helper to render an address card in the list
+    const renderAddressCard = (addr, isSelected = false) => {
+        const card = document.createElement('div');
+        card.className = `neo-address-card ${isSelected ? 'selected' : ''}`;
+        card.setAttribute('data-address-id', addr.id);
+
+        card.innerHTML = `
+            <input type="radio" name="selected_delivery_address" value="${addr.id}" ${isSelected ? 'checked' : ''} style="display:none;" />
+            <div class="address-card-header">
+                <label class="address-card-radio-label">
+                    <span class="address-custom-radio"></span>
+                    <span>${addr.city}, ${addr.province}</span>
+                </label>
+                <button type="button" class="address-details-toggle" aria-label="Toggle details">
+                    <span>Details</span>
+                    <i class="ph-bold ph-caret-down"></i>
+                </button>
+            </div>
+            <div class="address-expandable-details">
+                <div class="address-detail-item">
+                    <i class="ph-bold ph-phone"></i>
+                    <div><span class="address-detail-label">Contact:</span> ${addr.contact}</div>
+                </div>
+                <div class="address-detail-item">
+                    <i class="ph-bold ph-map-pin"></i>
+                    <div><span class="address-detail-label">District:</span> ${addr.district || 'N/A'}</div>
+                </div>
+                <div class="address-detail-item">
+                    <i class="ph-bold ph-house-line"></i>
+                    <div><span class="address-detail-label">Address:</span> ${addr.address}</div>
+                </div>
+                <div class="address-detail-item">
+                    <i class="ph-bold ph-mailbox"></i>
+                    <div><span class="address-detail-label">Postal Code:</span> ${addr.postcode}</div>
+                </div>
+            </div>
+        `;
+        bindAddressCardEvents(card);
+        return card;
+    };
+
+    const bindAddressCardEvents = (card) => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.address-details-toggle')) return;
+
+            document.querySelectorAll('.neo-address-card').forEach(c => {
+                c.classList.remove('selected');
+                const radio = c.querySelector('input[type="radio"]');
+                if (radio) radio.checked = false;
+            });
+
+            card.classList.add('selected');
+            const radio = card.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        });
+
+        const toggleBtn = card.querySelector('.address-details-toggle');
+        const detailsDiv = card.querySelector('.address-expandable-details');
+        if (toggleBtn && detailsDiv) {
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleBtn.classList.toggle('open');
+                detailsDiv.classList.toggle('open');
+            });
+        }
+    };
+
+    // Bind existing cards rendered by PHP
+    if (addressListContainer) {
+        addressListContainer.querySelectorAll('.neo-address-card').forEach(bindAddressCardEvents);
+    }
+
+    // Checkout button click handler
+    if (checkoutBtnActive) {
+        checkoutBtnActive.addEventListener('click', () => {
+            if (window.isUserLoggedIn === false) {
+                window.showNeoToast("Please sign in to your account to place your order.", "warning");
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1200);
+                return;
+            }
+
+            const addresses = window.initialUserAddresses || [];
+            if (addresses.length === 0) {
+                openModal(addAddrModal);
+            } else {
+                openModal(selectAddrModal);
+            }
+        });
+    }
+
+    // Client-side address field validation
+    const validateField = (input, errorEl, rule, message) => {
+        if (!rule) {
+            input.classList.add('is-invalid');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('active');
+            }
+            return false;
+        } else {
+            input.classList.remove('is-invalid');
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.remove('active');
+            }
+            return true;
+        }
+    };
+
+    // Handle Add Address Form Submission
+    if (addAddressForm) {
+        addAddressForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const provinceInput = document.getElementById('addr_province');
+            const districtInput = document.getElementById('addr_district');
+            const cityInput = document.getElementById('addr_city');
+            const postcodeInput = document.getElementById('addr_postcode');
+            const contactInput = document.getElementById('addr_contact');
+            const addressInput = document.getElementById('addr_address');
+
+            const errProvince = document.getElementById('err_province');
+            const errDistrict = document.getElementById('err_district');
+            const errCity = document.getElementById('err_city');
+            const errPostcode = document.getElementById('err_postcode');
+            const errContact = document.getElementById('err_contact');
+            const errAddress = document.getElementById('err_address');
+
+            let isValid = true;
+
+            isValid = validateField(provinceInput, errProvince, provinceInput.value.trim() !== '', 'Please select a province') && isValid;
+            isValid = validateField(districtInput, errDistrict, districtInput.value.trim() !== '', 'District name is required') && isValid;
+            isValid = validateField(cityInput, errCity, cityInput.value.trim() !== '', 'City name is required') && isValid;
+            
+            // Exactly 5 numeric digits
+            const postalVal = postcodeInput.value.trim();
+            isValid = validateField(postcodeInput, errPostcode, /^[0-9]{5}$/.test(postalVal), 'Postal code must be exactly 5 digits') && isValid;
+
+            // Exactly 11 numeric digits
+            const contactVal = contactInput.value.trim();
+            isValid = validateField(contactInput, errContact, /^[0-9]{11}$/.test(contactVal), 'Contact number must be exactly 11 digits (e.g. 03001234567)') && isValid;
+
+            isValid = validateField(addressInput, errAddress, addressInput.value.trim() !== '', 'Permanent address is required') && isValid;
+
+            if (!isValid) {
+                window.showNeoToast("Please resolve the highlighted address errors.", "warning");
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-submit-add-addr');
+            const originalBtnHtml = btnSubmit.innerHTML;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Saving Address...';
+
+            try {
+                const formData = new FormData(addAddressForm);
+                const res = await fetch('/handlers/address.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    window.showNeoToast(data.message || "Address saved successfully!", "success");
+
+                    const newAddress = data.address;
+                    if (!window.initialUserAddresses) window.initialUserAddresses = [];
+                    window.initialUserAddresses.unshift(newAddress);
+
+                    // Unselect existing cards
+                    if (addressListContainer) {
+                        addressListContainer.querySelectorAll('.neo-address-card').forEach(c => {
+                            c.classList.remove('selected');
+                            const r = c.querySelector('input[type="radio"]');
+                            if (r) r.checked = false;
+                        });
+                        // Insert new card at top
+                        const newCard = renderAddressCard(newAddress, true);
+                        addressListContainer.prepend(newCard);
+                    }
+
+                    // Reset form
+                    addAddressForm.reset();
+                    closeModal(addAddrModal);
+
+                    // Open select modal with new address selected
+                    openModal(selectAddrModal);
+                } else {
+                    window.showNeoToast(data.message || "Could not save address.", "error");
+                    if (data.field) {
+                        const badInput = document.getElementById(`addr_${data.field}`);
+                        const badErr = document.getElementById(`err_${data.field}`);
+                        if (badInput) badInput.classList.add('is-invalid');
+                        if (badErr) {
+                            badErr.textContent = data.message;
+                            badErr.classList.add('active');
+                        }
+                    }
+                }
+            } catch (err) {
+                window.showNeoToast("Connection error while saving address.", "error");
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalBtnHtml;
+            }
+        });
+    }
+
+    // Confirm & Place Order Handler
+    if (btnConfirmPlaceOrder) {
+        btnConfirmPlaceOrder.addEventListener('click', async () => {
+            const selectedRadio = document.querySelector('input[name="selected_delivery_address"]:checked');
+            if (!selectedRadio) {
+                window.showNeoToast("Please select a delivery address.", "warning");
+                return;
+            }
+
+            const addressId = selectedRadio.value;
+            const originalBtnHtml = btnConfirmPlaceOrder.innerHTML;
+            btnConfirmPlaceOrder.disabled = true;
+            btnConfirmPlaceOrder.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Processing Order...';
+
+            try {
+                const formData = new FormData();
+                formData.append('address_id', addressId);
+
+                const res = await fetch('/handlers/place_order.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    window.showNeoToast(data.message || "Order placed successfully!", "success", 2000);
+                    setTimeout(() => {
+                        window.location.href = data.redirect || `/orders.php?success=1&order_id=${data.order_id}`;
+                    }, 600);
+                } else {
+                    window.showNeoToast(data.message || "Failed to place order.", "error");
+                    btnConfirmPlaceOrder.disabled = false;
+                    btnConfirmPlaceOrder.innerHTML = originalBtnHtml;
+                }
+            } catch (err) {
+                window.showNeoToast("Connection error while processing order.", "error");
+                btnConfirmPlaceOrder.disabled = false;
+                btnConfirmPlaceOrder.innerHTML = originalBtnHtml;
+            }
+        });
+    }
 });
