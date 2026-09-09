@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const bookCards = document.querySelectorAll('.book-card');
 
     filterBtns.forEach(btn => {
+        if (btn.tagName === 'A') return;
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');

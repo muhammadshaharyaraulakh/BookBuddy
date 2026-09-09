@@ -10,7 +10,7 @@ $limit = 12;
 $offset = ($page - 1) * $limit;
 $categoryFilter = isset($_GET['category']) ? trim($_GET['category']) : 'all';
 
-$whereClauses = ["b.Stock >= 5"];
+$whereClauses = ["b.Stock < 5"];
 $params = [];
 
 if ($categoryFilter !== 'all' && is_numeric($categoryFilter)) {
@@ -66,9 +66,9 @@ $books = $fetchBooks->fetchAll(PDO::FETCH_OBJ);
     <div class="books-grid">
         <?php if (empty($books)): ?>
             <div style="grid-column: 1 / -1; text-align: center; padding: 48px 24px; background: var(--neo-white); border: var(--neo-border-width) solid var(--neo-black); border-radius: var(--neo-radius); box-shadow: var(--neo-shadow);">
-                <div style="font-size: 36px; margin-bottom: 8px;"><i class="ph-bold ph-book-open"></i></div>
-                <h3 style="font-size: 20px; font-weight: 800; color: var(--neo-black);">No Books Found</h3>
-                <p style="color: var(--neo-gray-muted); margin-top: 8px;">There are currently no books in this selection with 5 or more units in stock.</p>
+                <div style="font-size: 36px; margin-bottom: 8px;"><i class="ph-bold ph-check-circle"></i></div>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--neo-black);">No Out of Stock Books</h3>
+                <p style="color: var(--neo-gray-muted); margin-top: 8px;">All books currently have healthy inventory levels (5 or more units in stock).</p>
             </div>
         <?php else: ?>
             <?php foreach ($books as $book): ?>
@@ -88,7 +88,7 @@ $books = $fetchBooks->fetchAll(PDO::FETCH_OBJ);
                         <span class="book-price">$<?= $book->Original_Price ?></span>
                     <?php endif; ?>
 
-                    <div class="stock-status">In Stock (<?= $book->Stock ?>)</div>
+                    <div class="stock-status out-of-stock">Out of Stock (<?= $book->Stock ?>)</div>
                     <div class="book-actions">
                         <?php if ($book->is_on_deal > 0): ?>
                             <button type="button" class="btn btn-primary" disabled style="opacity: 0.45; cursor: not-allowed;" title="Cannot update book while in daily deal">Update</button>
@@ -98,6 +98,7 @@ $books = $fetchBooks->fetchAll(PDO::FETCH_OBJ);
                             <form action="/updatebook" method="get" class="bookform">
                                 <input type="hidden" name="id" value="<?= $book->id ?>">
                                 <input type="hidden" name="page" value="<?= $page ?>">
+                                <input type="hidden" name="from" value="outofstock">
                                 <?php if ($categoryFilter !== 'all'): ?>
                                     <input type="hidden" name="category" value="<?= htmlspecialchars($categoryFilter) ?>">
                                 <?php endif; ?>

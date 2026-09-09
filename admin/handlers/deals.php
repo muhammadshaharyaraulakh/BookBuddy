@@ -34,11 +34,34 @@ try {
         throw new Exception("An active daily deal is already running. Only 1 book can be on daily deal at a time.");
     }
 
-    $checkBook = $connection->prepare("SELECT id FROM book WHERE id = :id LIMIT 1");
+    // Section: Book Eligibility Verification (Price > 25, 0% Existing Discount, In Stock)
+    $checkBook = $connection->prepare("
+        SELECT id, title, Original_Price, Discount_Percentage, Stock 
+        FROM book 
+        WHERE id = :id 
+        LIMIT 1
+    ");
     $checkBook->execute([':id' => $id]);
-    if (!$checkBook->fetch()) {
+    $bookObj = $checkBook->fetch(PDO::FETCH_OBJ);
+
+    if (!$bookObj) {
         $response['field'] = 'id';
         throw new Exception("Selected book does not exist");
+    }
+
+    if ((float)$bookObj->Original_Price <= 25) {
+        $response['field'] = 'id';
+        throw new Exception("Only books with price greater than $25 are eligible for Daily Deals.");
+    }
+
+    if (!empty($bookObj->Discount_Percentage) && (float)$bookObj->Discount_Percentage > 0) {
+        $response['field'] = 'id';
+        throw new Exception("This book already has an active discount and cannot be set on Daily Deal.");
+    }
+
+    if ((int)$bookObj->Stock <= 0) {
+        $response['field'] = 'id';
+        throw new Exception("Out of stock books cannot be added to Daily Deals.");
     }
 
     $insert = $connection->prepare("

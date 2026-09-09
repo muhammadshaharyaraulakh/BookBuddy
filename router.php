@@ -41,6 +41,10 @@ $routes = [
     '/books.php'         => __DIR__ . '/admin/adminPages/book.php',
     '/adminbooks'        => __DIR__ . '/admin/adminPages/book.php',
     '/admin'             => __DIR__ . '/admin/adminPages/book.php',
+    '/outofstock'        => __DIR__ . '/admin/adminPages/outOfStock.php',
+    '/outofstock.php'    => __DIR__ . '/admin/adminPages/outOfStock.php',
+    '/out-of-stock'      => __DIR__ . '/admin/adminPages/outOfStock.php',
+    '/out-of-stock.php'  => __DIR__ . '/admin/adminPages/outOfStock.php',
     '/addbook'           => __DIR__ . '/admin/adminPages/addBook.php',
     '/addbook.php'       => __DIR__ . '/admin/adminPages/addBook.php',
     '/add-book'          => __DIR__ . '/admin/adminPages/addBook.php',
@@ -82,6 +86,12 @@ if ($path !== '/' && file_exists($requestedFile) && !is_dir($requestedFile)) {
 
 if ($path === '/' || $path === '/index.php') {
     require __DIR__ . '/index.php';
+    exit;
+}
+
+http_response_code(404);
+if (file_exists(__DIR__ . '/404.php')) {
+    require __DIR__ . '/404.php';
     exit;
 }
 

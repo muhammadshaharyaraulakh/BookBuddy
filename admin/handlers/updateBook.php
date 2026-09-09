@@ -156,10 +156,27 @@ try {
         ':id'            => $id
     ]);
 
+    $returnPage = isset($_POST['return_page']) ? max(1, (int)$_POST['return_page']) : 1;
+    $returnCategory = isset($_POST['return_category']) ? trim($_POST['return_category']) : '';
+    $returnFrom = isset($_POST['return_from']) && $_POST['return_from'] === 'outofstock' ? '/outofstock' : '/books';
+
+    $redirectParams = [];
+    if ($returnPage > 1) {
+        $redirectParams['page'] = $returnPage;
+    }
+    if ($returnCategory !== '' && $returnCategory !== 'all') {
+        $redirectParams['category'] = $returnCategory;
+    }
+
+    $redirectUrl = $returnFrom;
+    if (!empty($redirectParams)) {
+        $redirectUrl .= '?' . http_build_query($redirectParams);
+    }
+
     $response = [
         "status"  => "success",
         "message" => "Book updated successfully",
-        "redirect" => "/books"
+        "redirect" => $redirectUrl
     ];
 
 } catch (PDOException $e) {

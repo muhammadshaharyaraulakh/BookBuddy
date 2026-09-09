@@ -1,6 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
     RewriteRule ^login/?$ auth/login/login.php [L,QSA]
     RewriteRule ^register/?$ auth/registration/registration.php [L,QSA]
     RewriteRule ^registration/?$ auth/registration/registration.php [L,QSA]
@@ -19,6 +24,8 @@
     RewriteRule ^books/?$ admin/adminPages/book.php [L,QSA]
     RewriteRule ^adminbooks/?$ admin/adminPages/book.php [L,QSA]
     RewriteRule ^admin/?$ admin/adminPages/book.php [L,QSA]
+    RewriteRule ^outofstock/?$ admin/adminPages/outOfStock.php [L,QSA]
+    RewriteRule ^out-of-stock/?$ admin/adminPages/outOfStock.php [L,QSA]
     RewriteRule ^addbook/?$ admin/adminPages/addBook.php [L,QSA]
     RewriteRule ^add-book/?$ admin/adminPages/addBook.php [L,QSA]
     RewriteRule ^categories/?$ admin/adminPages/categories.php [L,QSA]
@@ -31,7 +38,8 @@
     RewriteRule ^update-book/?$ admin/adminPages/updateBook.php [L,QSA]
     RewriteRule ^orderdetails/?$ admin/adminPages/orderDetails.php [L,QSA]
     RewriteRule ^order-details/?$ admin/adminPages/orderDetails.php [L,QSA]
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ router.php [L,QSA]
 </IfModule>

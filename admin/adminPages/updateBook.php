@@ -27,6 +27,10 @@ $checkDeal = $connection->prepare("
 ");
 $checkDeal->execute([':id' => $id]);
 $isOnDeal = (bool)$checkDeal->fetch();
+
+$returnPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$returnCategory = isset($_GET['category']) ? trim($_GET['category']) : '';
+$returnFrom = isset($_GET['from']) && $_GET['from'] === 'outofstock' ? 'outofstock' : 'books';
 ?>
 
 <div id="content">
@@ -43,6 +47,9 @@ $isOnDeal = (bool)$checkDeal->fetch();
 
     <form action="/admin/handlers/updateBook.php" method="POST" enctype="multipart/form-data" class="ajax-form">
         <input type="hidden" name="id" value="<?= $result->id ?>">
+        <input type="hidden" name="return_page" value="<?= $returnPage ?>">
+        <input type="hidden" name="return_category" value="<?= htmlspecialchars($returnCategory) ?>">
+        <input type="hidden" name="return_from" value="<?= htmlspecialchars($returnFrom) ?>">
 
         <div class="form-row">
             <div class="form-group">

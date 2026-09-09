@@ -737,6 +737,11 @@ textarea:focus {
 }
 
 .category-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--neo-black);
     padding: 8px 18px;
     background: var(--neo-white);
     border: 2px solid var(--neo-black);
@@ -1560,5 +1565,365 @@ tbody tr:hover {
     .btn {
         padding: 8px 12px;
         font-size: 12px;
+}
+}
+
+.stock-status.out-of-stock {
+    color: #991B1B;
+    background: #FEE2E2;
+}
+
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 36px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.admin-pagination .pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-pagination .pagination-btn,
+.admin-pagination .pagination-page-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--neo-black);
+    text-decoration: none;
+    background: var(--neo-white);
+    border: var(--neo-border-width) solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    box-shadow: var(--neo-shadow-sm);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    min-width: 42px;
+    height: 42px;
+    box-sizing: border-box;
+}
+
+.admin-pagination .pagination-page-num.active {
+    background: var(--neo-yellow);
+    box-shadow: var(--neo-shadow);
+    transform: translate(-1px, -1px);
+}
+
+.admin-pagination .pagination-btn:hover:not(.pagination-disabled),
+.admin-pagination .pagination-page-num:hover:not(.active) {
+    background: var(--neo-cream);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--neo-shadow);
+}
+
+.admin-pagination .pagination-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: var(--neo-gray-light);
+    box-shadow: none;
+    pointer-events: none;
+}
+
+@media (max-width: 576px) {
+    .admin-pagination .pagination-btn,
+    .admin-pagination .pagination-page-num {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 36px;
+        height: 36px;
     }
+}
+
+/* ==========================================================================
+   Neo-Brutalist Custom Book Select Component (Daily Deal)
+   ========================================================================== */
+.neo-custom-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.neo-custom-select-container.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.neo-custom-select-trigger {
+    width: 100%;
+    min-height: 56px;
+    padding: 10px 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--neo-black);
+    background-color: var(--neo-white);
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius);
+    box-shadow: 4px 4px 0px #000000;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    text-align: left;
+}
+
+.neo-custom-select-trigger:hover:not(:disabled) {
+    background: #FFFDF0;
+}
+
+.neo-custom-select-trigger:focus-visible,
+.neo-custom-select-container.active .neo-custom-select-trigger {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000000;
+    background: var(--neo-white);
+}
+
+.neo-selected-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.neo-selected-placeholder .placeholder-text {
+    color: #6B7280;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.neo-selected-placeholder .neo-select-icon {
+    font-size: 20px;
+    color: var(--neo-yellow);
+    background: var(--neo-black);
+    padding: 4px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.neo-selected-book-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.neo-selected-book-info img {
+    width: 32px;
+    height: 42px;
+    object-fit: cover;
+    border: 1.5px solid var(--neo-black);
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: #e5e7eb;
+}
+
+.neo-selected-book-info .book-meta {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.neo-selected-book-info .book-title {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--neo-black);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.neo-selected-book-info .book-author {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6B7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.neo-selected-book-info .book-price-pill {
+    background: var(--neo-yellow);
+    color: var(--neo-black);
+    border: 1.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-pill);
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.neo-select-arrow {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--neo-black);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.neo-custom-select-container.active .neo-select-arrow {
+    transform: rotate(180deg);
+}
+
+.neo-custom-select-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: var(--neo-white);
+    border: 2.5px solid var(--neo-black);
+    border-radius: var(--neo-radius);
+    box-shadow: 6px 6px 0px #000000;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    animation: neoDropdownFade 0.15s ease;
+}
+
+@keyframes neoDropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.neo-custom-select-container.active .neo-custom-select-menu {
+    display: flex;
+}
+
+.neo-select-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--neo-black);
+    background: var(--neo-gray-light);
+}
+
+.neo-select-search-wrap i {
+    font-size: 18px;
+    color: var(--neo-black);
+}
+
+.neo-select-search-wrap input {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 4px 0 !important;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--neo-black);
+    width: 100%;
+    outline: none !important;
+}
+
+.neo-select-options-list {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.neo-select-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border: 2px solid transparent;
+    border-radius: var(--neo-radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.neo-select-option:hover,
+.neo-select-option.highlighted {
+    background: var(--neo-cream);
+    border-color: var(--neo-black);
+    box-shadow: 2px 2px 0px #000000;
+    transform: translate(-1px, -1px);
+}
+
+.neo-select-option.selected {
+    background: #FEF9C3;
+    border-color: var(--neo-black);
+    box-shadow: 2px 2px 0px #000000;
+}
+
+.option-book-cover {
+    width: 32px;
+    height: 42px;
+    object-fit: cover;
+    border: 1.5px solid var(--neo-black);
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: #e5e7eb;
+}
+
+.option-book-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.option-book-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--neo-black);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.option-book-author {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6B7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.option-book-price {
+    background: var(--neo-yellow);
+    border: 1.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-pill);
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--neo-black);
+    flex-shrink: 0;
+}
+
+.neo-select-empty {
+    padding: 20px 14px;
+    text-align: center;
+    color: #6B7280;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }

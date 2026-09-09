@@ -1,5 +1,54 @@
 <?php
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+if ($requestPath && $requestPath !== '/' && $requestPath !== '/index.php' && file_exists(__DIR__ . '/router.php')) {
+    require __DIR__ . '/router.php';
+    exit;
+}
+
 require __DIR__ . "/config/config.php";
+require_once __DIR__ . "/handlers/expireDeals.php";
+
+$allCategories = getCategories($connection);
+$categoriesByTitle = [];
+foreach ($allCategories as $cat) {
+    $categoriesByTitle[strtolower(trim($cat->title))] = $cat;
+}
+
+$newArrivalsQuery = $connection->prepare("
+    SELECT b.*, c.title AS category_title 
+    FROM book b 
+    LEFT JOIN categories c ON b.category_id = c.id 
+    WHERE NOT EXISTS (
+        SELECT 1 FROM deals d 
+        WHERE d.book_id = b.id AND d.status = 'active' AND CURRENT_TIMESTAMP < d.end_time
+    )
+    ORDER BY b.id DESC 
+    LIMIT 4
+");
+$newArrivalsQuery->execute();
+$newArrivals = $newArrivalsQuery->fetchAll(PDO::FETCH_OBJ);
+
+$dailyDealQuery = $connection->prepare("
+    SELECT 
+        b.*,
+        c.title AS category_title,
+        d.id AS deal_id,
+        d.discount_percentage,
+        d.start_time,
+        d.end_time
+    FROM book b
+    INNER JOIN deals d 
+        ON b.id = d.book_id
+       AND CURRENT_TIMESTAMP < d.end_time
+       AND d.status = 'active'
+    LEFT JOIN categories c
+        ON b.category_id = c.id
+    ORDER BY d.id DESC
+    LIMIT 1
+");
+$dailyDealQuery->execute();
+$dailyDeal = $dailyDealQuery->fetch(PDO::FETCH_OBJ);
+
 require __DIR__ . "/includes/header.php";
 require __DIR__ . "/includes/navigationbar.php";
 ?>
@@ -37,77 +86,32 @@ require __DIR__ . "/includes/navigationbar.php";
     </div>
 
     <div class="books-grid-4">
-        <a href="/book.php" class="book-card">
-            <div class="book-cover-wrap">
-                <img src="/images/logo.png" alt="Clean Code" class="book-cover-img" />
-            </div>
-            <div class="book-details">
-                <h3 class="book-title">Clean Code: A Handbook of Agile Software</h3>
-                <span class="book-author">Robert C. Martin</span>
-                <div class="book-rating">
-                    <i class="ph-bold ph-star"></i>
-                    <span>4.9 (128)</span>
+        <?php foreach ($newArrivals as $book): ?>
+            <a href="/book?id=<?= $book->id ?>" class="book-card">
+                <?php if (!empty($book->Discount_Percentage) && $book->Discount_Percentage > 0): ?>
+                    <span class="book-discount-badge">-<?= htmlspecialchars($book->Discount_Percentage) ?>%</span>
+                <?php endif; ?>
+                <div class="book-cover-wrap">
+                    <img src="/images/<?= htmlspecialchars($book->coverImage) ?>" alt="<?= htmlspecialchars($book->title) ?>" class="book-cover-img" onerror="this.src='/images/logo.png'" />
                 </div>
-                <div class="book-price-row">
-                    <span class="book-current-price">$120</span>
+                <div class="book-details">
+                    <h3 class="book-title"><?= htmlspecialchars($book->title) ?></h3>
+                    <span class="book-author"><?= htmlspecialchars($book->author) ?></span>
+                    <div class="book-rating">
+                        <i class="ph-bold ph-tag"></i>
+                        <span><?= htmlspecialchars($book->category_title ?? 'General') ?></span>
+                    </div>
+                    <div class="book-price-row">
+                        <?php if (!empty($book->Discount_Percentage) && $book->Discount_Percentage > 0): ?>
+                            <span class="book-current-price">$<?= number_format((float)$book->Discount_Price, 2) ?></span>
+                            <span class="book-original-price">$<?= number_format((float)$book->Original_Price, 2) ?></span>
+                        <?php else: ?>
+                            <span class="book-current-price">$<?= number_format((float)$book->Original_Price, 2) ?></span>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-        </a>
-
-        <a href="/book.php" class="book-card">
-            <span class="book-discount-badge">-20%</span>
-            <div class="book-cover-wrap">
-                <img src="/images/logo.png" alt="The Pragmatic Programmer" class="book-cover-img" />
-            </div>
-            <div class="book-details">
-                <h3 class="book-title">The Pragmatic Programmer: 20th Anniversary Edition</h3>
-                <span class="book-author">David Thomas &amp; Andrew Hunt</span>
-                <div class="book-rating">
-                    <i class="ph-bold ph-star"></i>
-                    <span>4.8 (95)</span>
-                </div>
-                <div class="book-price-row">
-                    <span class="book-current-price">$240</span>
-                    <span class="book-original-price">$260</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="/book.php" class="book-card">
-            <div class="book-cover-wrap">
-                <img src="/images/logo.png" alt="Atomic Habits" class="book-cover-img" />
-            </div>
-            <div class="book-details">
-                <h3 class="book-title">Atomic Habits: Proven Way to Build Good Habits</h3>
-                <span class="book-author">James Clear</span>
-                <div class="book-rating">
-                    <i class="ph-bold ph-star"></i>
-                    <span>5.0 (310)</span>
-                </div>
-                <div class="book-price-row">
-                    <span class="book-current-price">$180</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="/book.php" class="book-card">
-            <span class="book-discount-badge">-30%</span>
-            <div class="book-cover-wrap">
-                <img src="/images/logo.png" alt="Design Patterns" class="book-cover-img" />
-            </div>
-            <div class="book-details">
-                <h3 class="book-title">Design Patterns: Elements of Reusable Object Software</h3>
-                <span class="book-author">Erich Gamma &amp; Richard Helm</span>
-                <div class="book-rating">
-                    <i class="ph-bold ph-star"></i>
-                    <span>4.7 (84)</span>
-                </div>
-                <div class="book-price-row">
-                    <span class="book-current-price">$130</span>
-                    <span class="book-original-price">$160</span>
-                </div>
-            </div>
-        </a>
+            </a>
+        <?php endforeach; ?>
     </div>
 
     <div class="section-btn-wrap">
@@ -118,66 +122,89 @@ require __DIR__ . "/includes/navigationbar.php";
 </section>
 
 <section class="daily-deal-section" id="deals">
-    <div class="daily-deal-card">
-        <div class="deal-visual-side">
-            <div class="deal-badge-spotlight">
-                <i class="ph-bold ph-fire"></i> Flash Deal 25% Off
+    <?php if ($dailyDeal): ?>
+        <div class="daily-deal-card">
+            <div class="deal-visual-side">
+                <div class="deal-badge-spotlight">
+                    <i class="ph-bold ph-fire"></i> Flash Deal <?= htmlspecialchars($dailyDeal->discount_percentage) ?>% Off
+                </div>
+                <img src="/images/<?= htmlspecialchars($dailyDeal->coverImage) ?>" alt="<?= htmlspecialchars($dailyDeal->title) ?>" class="deal-book-img" onerror="this.src='/images/logo.png'" />
             </div>
-            <img src="/images/logo.png" alt="Thinking Fast and Slow" class="deal-book-img" />
+
+            <div class="deal-content-side">
+                <h2 class="deal-title"><?= htmlspecialchars($dailyDeal->title) ?></h2>
+                <div class="deal-meta-specs">
+                    <span><i class="ph-bold ph-user-circle"></i> <?= htmlspecialchars($dailyDeal->author) ?></span>
+                    <span><i class="ph-bold ph-tag"></i> <?= htmlspecialchars($dailyDeal->category_title ?? 'Featured') ?></span>
+                    <span><i class="ph-bold ph-star" style="color: #FFAE00;"></i> 4.9 Rating</span>
+                </div>
+                <p class="deal-desc">
+                    <?= htmlspecialchars($dailyDeal->description_para_1) ?>
+                </p>
+
+                <div class="deal-countdown-box" data-end-time="<?= htmlspecialchars($dailyDeal->end_time) ?>">
+                    <span class="deal-countdown-label">
+                        <i class="ph-bold ph-timer"></i> Offer Ends In:
+                    </span>
+                    <div class="deal-timer-pills">
+                        <span class="timer-unit" id="deal-hours">--h</span>
+                        <span>:</span>
+                        <span class="timer-unit" id="deal-mins">--m</span>
+                        <span>:</span>
+                        <span class="timer-unit" id="deal-secs">--s</span>
+                    </div>
+                </div>
+
+                <div class="deal-price-cta">
+                    <div class="deal-price-numbers">
+                        <span class="deal-price-now">$<?= number_format((float)$dailyDeal->Discount_Price, 2) ?></span>
+                        <span class="deal-price-was">$<?= number_format((float)$dailyDeal->Original_Price, 2) ?></span>
+                    </div>
+                    <a href="/book?id=<?= $dailyDeal->id ?>" class="btn-grab-deal">
+                        Grab Deal Now <i class="ph-bold ph-shopping-bag"></i>
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <div class="deal-content-side">
-            <h2 class="deal-title">Thinking, Fast and Slow</h2>
-            <div class="deal-meta-specs">
-                <span><i class="ph-bold ph-user-circle"></i> Daniel Kahneman</span>
-                <span><i class="ph-bold ph-tag"></i> Behavioral Economics</span>
-                <span><i class="ph-bold ph-star" style="color: #FFAE00;"></i> 4.9 Rating</span>
-            </div>
-            <p class="deal-desc">
-                The international bestseller that explores the two mental engines driving our decisions: fast intuition versus conscious deliberation. A transformative masterpiece for curious readers.
-            </p>
-
-            <div class="deal-countdown-box">
-                <span class="deal-countdown-label">
-                    <i class="ph-bold ph-timer"></i> Offer Ends In:
-                </span>
-                <div class="deal-timer-pills">
-                    <span class="timer-unit" id="deal-hours">14h</span>
-                    <span>:</span>
-                    <span class="timer-unit" id="deal-mins">35m</span>
-                    <span>:</span>
-                    <span class="timer-unit" id="deal-secs">12s</span>
+    <?php else: ?>
+        <div class="daily-deal-card" style="text-align: center; padding: 48px 24px; justify-content: center;">
+            <div class="deal-content-side" style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <div class="deal-badge-spotlight" style="display: inline-flex; margin: 0 auto 16px;">
+                    <i class="ph-bold ph-sparkle"></i> Next Deal Coming Soon
                 </div>
-            </div>
-
-            <div class="deal-price-cta">
-                <div class="deal-price-numbers">
-                    <span class="deal-price-now">$24.00</span>
-                    <span class="deal-price-was">$32.00</span>
-                </div>
-                <a href="/cart.php" class="btn-grab-deal">
-                    Grab Deal Now <i class="ph-bold ph-shopping-bag"></i>
+                <h2 class="deal-title" style="margin-bottom: 12px;">Daily Deal Refreshing</h2>
+                <p class="deal-desc" style="margin: 0 auto 20px;">
+                    Our daily flash deals offer discounts up to 70% off. Check back soon or explore our catalog for exceptional titles.
+                </p>
+                <a href="/shop.php" class="btn-grab-deal" style="display: inline-flex; align-items: center; justify-content: center; margin: 0 auto;">
+                    Explore Catalog <i class="ph-bold ph-arrow-right"></i>
                 </a>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 </section>
 
+<?php
+$progCat = $categoriesByTitle['programming'] ?? null;
+$philCat = $categoriesByTitle['philosophy'] ?? null;
+$relCat  = $categoriesByTitle['religious'] ?? null;
+$bioCat  = $categoriesByTitle['biographies'] ?? $categoriesByTitle['biography'] ?? null;
+?>
 <section class="section-container" id="genres">
     <div class="bento-section-box">
         <h2 class="bento-title">Browse By Genre</h2>
 
         <div class="bento-grid">
             <div class="bento-row bento-row-1">
-                <a href="/shop.php?category=programming" class="bento-card bento-card-programming">
+                <a href="/shop.php?category=<?= urlencode($progCat ? $progCat->title : 'Programming') ?>" class="bento-card bento-card-programming">
                     <div class="bento-card-header">
-                        <div class="bento-label-pill">Programming</div>
+                        <div class="bento-label-pill"><?= htmlspecialchars($progCat ? $progCat->title : 'Programming') ?></div>
                         <div class="genre-icon-pill">
                             <i class="ph-bold ph-code"></i>
                         </div>
                     </div>
                     <div class="genre-card-info">
-                        <h3 class="genre-name-title">Programming &amp; Tech</h3>
+                        <h3 class="genre-name-title"><?= htmlspecialchars($progCat ? $progCat->title : 'Programming') ?> &amp; Tech</h3>
                         <p class="genre-name-desc">Clean architecture, systems design, software patterns, and modern dev stacks.</p>
                     </div>
                     <div class="genre-action-row">
@@ -185,15 +212,15 @@ require __DIR__ . "/includes/navigationbar.php";
                     </div>
                 </a>
 
-                <a href="/shop.php?category=philosophy" class="bento-card bento-card-philosophy">
+                <a href="/shop.php?category=<?= urlencode($philCat ? $philCat->title : 'Philosophy') ?>" class="bento-card bento-card-philosophy">
                     <div class="bento-card-header">
-                        <div class="bento-label-pill">Philosophy</div>
+                        <div class="bento-label-pill"><?= htmlspecialchars($philCat ? $philCat->title : 'Philosophy') ?></div>
                         <div class="genre-icon-pill">
                             <i class="ph-bold ph-brain"></i>
                         </div>
                     </div>
                     <div class="genre-card-info">
-                        <h3 class="genre-name-title">Philosophy &amp; Logic</h3>
+                        <h3 class="genre-name-title"><?= htmlspecialchars($philCat ? $philCat->title : 'Philosophy') ?> &amp; Logic</h3>
                         <p class="genre-name-desc">Classical thinkers, ethics, metaphysics, epistemology, and existential inquiries.</p>
                     </div>
                     <div class="genre-action-row">
@@ -203,15 +230,15 @@ require __DIR__ . "/includes/navigationbar.php";
             </div>
 
             <div class="bento-row bento-row-2">
-                <a href="/shop.php?category=religious" class="bento-card bento-card-religious">
+                <a href="/shop.php?category=<?= urlencode($relCat ? $relCat->title : 'Religious') ?>" class="bento-card bento-card-religious">
                     <div class="bento-card-header">
-                        <div class="bento-label-pill">Religious</div>
+                        <div class="bento-label-pill"><?= htmlspecialchars($relCat ? $relCat->title : 'Religious') ?></div>
                         <div class="genre-icon-pill">
                             <i class="ph-bold ph-book-bookmark"></i>
                         </div>
                     </div>
                     <div class="genre-card-info">
-                        <h3 class="genre-name-title">Religious &amp; Spiritual</h3>
+                        <h3 class="genre-name-title"><?= htmlspecialchars($relCat ? $relCat->title : 'Religious') ?> &amp; Spiritual</h3>
                         <p class="genre-name-desc">Theological texts, classical commentaries, Islamic history, and divine wisdom.</p>
                     </div>
                     <div class="genre-action-row">
@@ -219,15 +246,15 @@ require __DIR__ . "/includes/navigationbar.php";
                     </div>
                 </a>
 
-                <a href="/shop.php?category=biography" class="bento-card bento-card-biographies">
+                <a href="/shop.php?category=<?= urlencode($bioCat ? $bioCat->title : 'Biographies') ?>" class="bento-card bento-card-biographies">
                     <div class="bento-card-header">
-                        <div class="bento-label-pill">Biographies</div>
+                        <div class="bento-label-pill"><?= htmlspecialchars($bioCat ? $bioCat->title : 'Biographies') ?></div>
                         <div class="genre-icon-pill">
                             <i class="ph-bold ph-user-circle"></i>
                         </div>
                     </div>
                     <div class="genre-card-info">
-                        <h3 class="genre-name-title">Biographies &amp; Memoirs</h3>
+                        <h3 class="genre-name-title"><?= htmlspecialchars($bioCat ? $bioCat->title : 'Biographies') ?> &amp; Memoirs</h3>
                         <p class="genre-name-desc">Inspiring chronicles of groundbreaking pioneers, leaders, and thinkers.</p>
                     </div>
                     <div class="genre-action-row">

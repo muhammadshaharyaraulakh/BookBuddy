@@ -1,5 +1,6 @@
 <?php
 protectAdmin();
+$currentAdminUri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,11 +33,12 @@ protectAdmin();
             </div>
 
             <ul class="components">
-                <li><a href="/books"><i class="ph-bold ph-book-open"></i> Books</a></li>
-                <li><a href="/addbook"><i class="ph-bold ph-plus-circle"></i> Add Book</a></li>
-                <li><a href="/categories"><i class="ph-bold ph-tag"></i> Categories</a></li>
-                <li><a href="/dailydeal"><i class="ph-bold ph-lightning"></i> Daily Deal</a></li>
-                <li><a href="/adminorders"><i class="ph-bold ph-shopping-bag"></i> Orders</a></li>
+                <li class="<?= (str_starts_with($currentAdminUri, '/books') || $currentAdminUri === '/admin') ? 'active' : '' ?>"><a href="/books"><i class="ph-bold ph-book-open"></i> Books</a></li>
+                <li class="<?= (str_starts_with($currentAdminUri, '/outofstock') || str_starts_with($currentAdminUri, '/out-of-stock')) ? 'active' : '' ?>"><a href="/outofstock"><i class="ph-bold ph-warning-circle"></i> Out of Stock</a></li>
+                <li class="<?= (str_starts_with($currentAdminUri, '/addbook') || str_starts_with($currentAdminUri, '/add-book')) ? 'active' : '' ?>"><a href="/addbook"><i class="ph-bold ph-plus-circle"></i> Add Book</a></li>
+                <li class="<?= (str_starts_with($currentAdminUri, '/categories')) ? 'active' : '' ?>"><a href="/categories"><i class="ph-bold ph-tag"></i> Categories</a></li>
+                <li class="<?= (str_starts_with($currentAdminUri, '/dailydeal') || str_starts_with($currentAdminUri, '/daily-deal')) ? 'active' : '' ?>"><a href="/dailydeal"><i class="ph-bold ph-lightning"></i> Daily Deal</a></li>
+                <li class="<?= (str_starts_with($currentAdminUri, '/adminorders') || str_starts_with($currentAdminUri, '/admin-orders')) ? 'active' : '' ?>"><a href="/adminorders"><i class="ph-bold ph-shopping-bag"></i> Orders</a></li>
                 <li><a href="/index.php"><i class="ph-bold ph-storefront"></i> View Store</a></li>
                 <li><a href="/logout" class="sidebar-logout"><i class="ph-bold ph-sign-out"></i> Logout</a></li>
             </ul>

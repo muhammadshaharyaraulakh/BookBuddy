@@ -1,3 +1,8 @@
+<?php
+if (!isset($allCategories)) {
+    $allCategories = getCategories($connection);
+}
+?>
 <header class="site-header">
     <nav class="navbar">
         <a href="/index.php" class="nav-brand">
@@ -20,21 +25,11 @@
                         <i class="ph-bold ph-magnifying-glass"></i>
                         <input type="text" placeholder="Filter Categories" autocomplete="off">
                     </div>
-                    <a href="/shop.php?category=programming" class="category-item">
-                        Programming
-                    </a>
-                    <a href="/shop.php?category=scifi" class="category-item">
-                        Fantasy
-                    </a>
-                    <a href="/shop.php?category=business" class="category-item">
-                        Business
-                    </a>
-                    <a href="/shop.php?category=biography" class="category-item">
-                        Biographies
-                    </a>
-                    <a href="/shop.php?category=classics" class="category-item">
-                        History
-                    </a>
+                    <?php foreach ($allCategories as $index => $cat): ?>
+                        <a href="/shop.php?category=<?= urlencode($cat->title) ?>" class="category-item" style="<?= $index < 4 ? 'display: flex;' : 'display: none;' ?>">
+                            <?= htmlspecialchars($cat->title) ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
