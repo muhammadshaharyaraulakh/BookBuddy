@@ -1,5 +1,17 @@
 {
+    "name": "bookbuddy/app",
+    "description": "BookBuddy Bookstore E-Commerce Platform",
+    "type": "project",
     "require": {
+        "php": ">=8.1",
         "phpmailer/phpmailer": "^7.1"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }

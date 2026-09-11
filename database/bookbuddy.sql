@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS BookBuddy CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE BookBuddy;
+-- BookBuddy Database Schema (Compatible with local and Railway cloud MySQL)
 CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fullname VARCHAR(50) NOT NULL,
@@ -76,6 +75,7 @@ CREATE TABLE IF NOT EXISTS user_address (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     province VARCHAR(50) NOT NULL,
+    district VARCHAR(100) DEFAULT NULL,
     city VARCHAR(100) NOT NULL,
     postcode VARCHAR(20) NOT NULL,
     address TEXT NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS orders (
     user_id INT NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL,
     payment_method VARCHAR(50) NOT NULL DEFAULT 'Cash on Delivery',
-    payment_status ENUM('pending', 'paid', 'failed') NOT NULL DEFAULT 'pending',
+    payment_status ENUM('pending', 'paid', 'completed', 'failed') NOT NULL DEFAULT 'pending',
     order_status ENUM(
         'processing',
         'shipped',
@@ -97,7 +97,9 @@ CREATE TABLE IF NOT EXISTS orders (
         'returned'
     ) NOT NULL DEFAULT 'processing',
     shipping_address_id INT DEFAULT NULL,
+    shipping_address_text TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
     FOREIGN KEY (shipping_address_id) REFERENCES user_address(id) ON DELETE
     SET NULL

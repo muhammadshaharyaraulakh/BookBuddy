@@ -2042,39 +2042,46 @@ tbody tr:hover {
 /* Actions Column in Orders Table */
 .order-actions-cell {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: 6px;
-    min-width: 250px;
+    gap: 8px;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+.order-actions-cell .ajax-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    flex-wrap: nowrap;
 }
 
 .order-status-select {
-    padding: 6px 8px;
-    border: 1.5px solid var(--neo-black);
+    height: 36px;
+    padding: 6px 10px;
+    border: var(--neo-border-width) solid var(--neo-black);
     border-radius: var(--neo-radius-sm);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     background: var(--neo-white);
     color: var(--neo-black);
     cursor: pointer;
+    box-shadow: 2px 2px 0px var(--neo-black);
 }
 
-.btn-icon-square {
+.order-actions-cell .btn {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 800;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: 1.5px solid var(--neo-black);
-    border-radius: var(--neo-radius-sm);
+    white-space: nowrap;
     box-shadow: 2px 2px 0px var(--neo-black);
-    cursor: pointer;
-    transition: transform 0.1s ease;
-}
-
-.btn-icon-square:hover {
-    transform: translate(-1px, -1px);
+    border: var(--neo-border-width) solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
 }
 
 /* Deleted Catalog Badge */

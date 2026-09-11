@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . "/config/config.php";
 require __DIR__ . "/includes/header.php";
-require __DIR__ . "/includes/navigationbar.php";
+require __DIR__ . "/includes/navigationBar.php";
 
 $userName = $_SESSION['name'] ?? 'Muhammad Shaharyar';
 $userEmail = $_SESSION['gmail'] ?? 'reader@bookbuddy.com';
@@ -310,6 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <?php 
-require __DIR__ . "/includes/footersection.php";
+require __DIR__ . "/includes/footerSection.php";
 require __DIR__ . "/includes/footer.php";
 ?>

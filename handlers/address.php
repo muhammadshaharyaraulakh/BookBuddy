@@ -75,7 +75,9 @@ try {
         if ($colCheck->rowCount() === 0) {
             $connection->exec("ALTER TABLE user_address ADD COLUMN district VARCHAR(100) DEFAULT NULL AFTER province");
         }
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+        throw new Exception("Error while updating address.");
+    }
 
     // Section 4: Insert or Update Address
     if ($address_id && $address_id > 0) {

@@ -25,28 +25,9 @@ try {
         throw new Exception("Order not found or already deleted.");
     }
 
-    // If order was in active state (not cancelled or returned), return books back to stock before deleting
-    if (!in_array($order->order_status, ['cancelled', 'returned'])) {
-        $itemsStmt = $connection->prepare("
-            SELECT book_id, quantity 
-            FROM order_items 
-            WHERE order_id = :oid AND book_id IS NOT NULL
-        ");
-        $itemsStmt->execute([':oid' => $order_id]);
-        $items = $itemsStmt->fetchAll(PDO::FETCH_OBJ);
-
-        $restockStmt = $connection->prepare("
-            UPDATE book 
-            SET Stock = Stock + :qty 
-            WHERE id = :bid
-        ");
-
-        foreach ($items as $item) {
-            $restockStmt->execute([
-                ':qty' => (int)$item->quantity,
-                ':bid' => (int)$item->book_id
-            ]);
-        }
+    // Admin can delete an order ONLY if it is cancelled
+    if ($order->order_status !== 'cancelled') {
+        throw new Exception("Only cancelled orders can be deleted. Please update the order status to 'Cancelled' first.");
     }
 
     // Delete order (cascades to order_items)

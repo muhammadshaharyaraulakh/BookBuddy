@@ -132,7 +132,7 @@ if ($isSaleFilter && $selectedCategory) {
 }
 
 require __DIR__ . "/includes/header.php";
-require __DIR__ . "/includes/navigationbar.php";
+require __DIR__ . "/includes/navigationBar.php";
 ?>
 
 <div class="page-header-banner">
@@ -264,6 +264,6 @@ require __DIR__ . "/includes/navigationbar.php";
 </div>
 
 <?php
-require __DIR__ . "/includes/footersection.php";
+require __DIR__ . "/includes/footerSection.php";
 require __DIR__ . "/includes/footer.php";
 ?>

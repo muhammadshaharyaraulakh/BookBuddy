@@ -1,6 +1,6 @@
-# Database credentials
-config/config.php
+# Environment & Local Overrides
 .env
+.env.local
 
 # Dependencies
 node_modules/
@@ -13,10 +13,10 @@ Thumbs.db
 # Log files
 *.log
 
-# Uploads
-userImages/
-images/
+# Dynamic User Profile Uploads (preserve folder with .gitkeep)
+userImages/*
+!userImages/.gitkeep
+!userImages/default-avatar.png
 
-# Security & Locks
+# Security & Temporary files
 storage/
-*.lock

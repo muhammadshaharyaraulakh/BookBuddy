@@ -1,0 +1,19 @@
+# Railway Nixpacks Configuration for BookBuddy PHP Application
+[phases.setup]
+nixPkgs = [
+  "php82",
+  "php82Packages.composer",
+  "php82Extensions.pdo_mysql",
+  "php82Extensions.gd",
+  "php82Extensions.mbstring",
+  "php82Extensions.curl",
+  "php82Extensions.fileinfo"
+]
+
+[phases.install]
+cmds = [
+  "composer install --no-dev --optimize-autoloader --no-interaction"
+]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT router.php"

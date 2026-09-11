@@ -50,7 +50,7 @@ $dailyDealQuery->execute();
 $dailyDeal = $dailyDealQuery->fetch(PDO::FETCH_OBJ);
 
 require __DIR__ . "/includes/header.php";
-require __DIR__ . "/includes/navigationbar.php";
+require __DIR__ . "/includes/navigationBar.php";
 ?>
 
 <section class="hero-section">
@@ -160,9 +160,9 @@ require __DIR__ . "/includes/navigationbar.php";
                         <span class="deal-price-now">$<?= number_format((float)$dailyDeal->Discount_Price, 2) ?></span>
                         <span class="deal-price-was">$<?= number_format((float)$dailyDeal->Original_Price, 2) ?></span>
                     </div>
-                    <a href="/book?id=<?= $dailyDeal->id ?>" class="btn-grab-deal">
-                        Grab Deal Now <i class="ph-bold ph-shopping-bag"></i>
-                    </a>
+                    <button type="button" class="btn-grab-deal btn-claim-daily-deal" data-deal-id="<?= (int)$dailyDeal->deal_id ?>" data-book-id="<?= (int)$dailyDeal->id ?>" data-book-title="<?= htmlspecialchars($dailyDeal->title, ENT_QUOTES) ?>" data-deal-price="<?= number_format((float)$dailyDeal->Discount_Price, 2, '.', '') ?>">
+                        Claim Deal Now <i class="ph-bold ph-lightning"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -497,6 +497,7 @@ $bioCat  = $categoriesByTitle['biographies'] ?? $categoriesByTitle['biography'] 
 </section>
 
 <?php 
-require __DIR__ . "/includes/footersection.php";
+require __DIR__ . "/includes/addressModals.php";
+require __DIR__ . "/includes/footerSection.php";
 require __DIR__ . "/includes/footer.php";
 ?>

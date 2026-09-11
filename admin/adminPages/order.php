@@ -148,7 +148,7 @@ $orders = $fetchOrders->fetchAll(PDO::FETCH_OBJ);
                             </td>
                             <td>
                                 <div class="order-actions-cell">
-                                    <form action="/admin/handlers/updateOrderStatus.php" method="POST" class="ajax-form" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                    <form action="/admin/handlers/updateOrderStatus.php" method="POST" class="ajax-form">
                                         <input type="hidden" name="order_id" value="<?= (int)$order->id ?>">
                                         <select name="status" class="order-status-select">
                                             <option value="processing" <?= $order->order_status === 'processing' ? 'selected' : '' ?>>Processing</option>
@@ -157,21 +157,20 @@ $orders = $fetchOrders->fetchAll(PDO::FETCH_OBJ);
                                             <option value="cancelled" <?= $order->order_status === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
                                             <option value="returned" <?= $order->order_status === 'returned' ? 'selected' : '' ?>>Returned</option>
                                         </select>
-                                        <button class="btn btn-primary" type="submit" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
-                                            <i class="ph-bold ph-arrows-clockwise"></i> Update
+                                        <button class="btn btn-primary" type="submit">
+                                            Update
                                         </button>
                                     </form>
 
-                                    <a href="/orderdetails?id=<?= (int)$order->id ?>" class="btn btn-secondary btn-icon-square" title="View Order Details">
-                                        <i class="ph-bold ph-eye"></i>
+                                    <a href="/orderdetails?id=<?= (int)$order->id ?>" class="btn btn-secondary" title="View Order Details">
+                                        View
                                     </a>
 
-                                    <form action="/admin/handlers/deleteOrder.php" method="POST" class="ajax-form" onsubmit="return confirm('Are you sure you want to delete order #ORD-<?= (int)$order->id ?>? If active, stock will be safely restored.');" style="display: inline-block;">
-                                        <input type="hidden" name="order_id" value="<?= (int)$order->id ?>">
-                                        <button class="btn btn-danger btn-icon-square" type="submit" title="Delete Order">
-                                            <i class="ph-bold ph-trash"></i>
+                                    <?php if ($order->order_status === 'cancelled'): ?>
+                                        <button type="button" class="btn btn-danger openDeleteOrderModal" data-order-id="<?= (int)$order->id ?>" data-order-number="#ORD-<?= (int)$order->id ?>" title="Delete Cancelled Order">
+                                            Delete
                                         </button>
-                                    </form>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
@@ -198,6 +197,62 @@ $orders = $fetchOrders->fetchAll(PDO::FETCH_OBJ);
         </table>
     </div>
 </div>
+
+<!-- Delete Order Confirmation Modal -->
+<div class="modal-overlay" id="deleteOrderOverlay"></div>
+
+<div class="confirm-modal" id="deleteOrderModal">
+    <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="ph-bold ph-warning-circle" style="font-size: 22px; color: var(--neo-pink);"></i>
+            <h3>Delete Cancelled Order</h3>
+        </div>
+        <span class="close-modal" id="closeDeleteOrder">&times;</span>
+    </div>
+    <div class="confirm-modal-body">
+        <p>Are you sure you want to permanently delete cancelled order <span class="confirm-book-badge" id="deleteOrderNumber"></span>?</p>
+        <div class="confirm-modal-warning-box">
+            <i class="ph-bold ph-info"></i>
+            <p>This action will permanently purge this cancelled order record from database history. This action cannot be reversed.</p>
+        </div>
+    </div>
+    <form action="/admin/handlers/deleteOrder.php" method="POST" class="ajax-form" id="deleteOrderForm">
+        <input type="hidden" name="order_id" id="deleteOrderIdField">
+        <div class="confirm-modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteOrderBtn">Cancel</button>
+            <button type="submit" class="btn btn-danger" id="confirmDeleteOrderBtn">Delete Order</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const deleteOrderModal = document.getElementById('deleteOrderModal');
+    const deleteOrderOverlay = document.getElementById('deleteOrderOverlay');
+    const closeDeleteOrderBtn = document.getElementById('closeDeleteOrder');
+    const cancelDeleteOrderBtn = document.getElementById('cancelDeleteOrderBtn');
+    const deleteOrderIdField = document.getElementById('deleteOrderIdField');
+    const deleteOrderNumber = document.getElementById('deleteOrderNumber');
+
+    document.querySelectorAll('.openDeleteOrderModal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-order-id');
+            const num = this.getAttribute('data-order-number') || `#ORD-${id}`;
+            if (deleteOrderIdField) deleteOrderIdField.value = id;
+            if (deleteOrderNumber) deleteOrderNumber.innerText = num;
+            if (deleteOrderModal) deleteOrderModal.classList.add('active');
+            if (deleteOrderOverlay) deleteOrderOverlay.classList.add('active');
+        });
+    });
+
+    function closeDeleteOrderModal() {
+        if (deleteOrderModal) deleteOrderModal.classList.remove('active');
+        if (deleteOrderOverlay) deleteOrderOverlay.classList.remove('active');
+    }
+
+    if (closeDeleteOrderBtn) closeDeleteOrderBtn.addEventListener('click', closeDeleteOrderModal);
+    if (cancelDeleteOrderBtn) cancelDeleteOrderBtn.addEventListener('click', closeDeleteOrderModal);
+    if (deleteOrderOverlay) deleteOrderOverlay.addEventListener('click', closeDeleteOrderModal);
+</script>
 <script src="/assests/js/admin.js"></script>
 </body>
 </html>

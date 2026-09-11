@@ -33,7 +33,7 @@ if ($user_id) {
 $successOrderId = filter_input(INPUT_GET, 'order_id', FILTER_VALIDATE_INT);
 
 require __DIR__ . "/includes/header.php";
-require __DIR__ . "/includes/navigationbar.php";
+require __DIR__ . "/includes/navigationBar.php";
 ?>
 
 <!-- Section 2: Header Banner -->
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const formData = new FormData();
                     formData.append('order_id', orderId);
 
-                    const res = await fetch('/handlers/cancel_order.php', {
+                    const res = await fetch('/handlers/cancelOrder.php', {
                         method: 'POST',
                         body: formData
                     });
@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const formData = new FormData();
                     formData.append('order_id', orderId);
 
-                    const res = await fetch('/handlers/delete_user_order.php', {
+                    const res = await fetch('/handlers/deleteUserOrder.php', {
                         method: 'POST',
                         body: formData
                     });
@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <?php 
-require __DIR__ . "/includes/footersection.php";
+require __DIR__ . "/includes/footerSection.php";
 require __DIR__ . "/includes/footer.php";
 ?>
 

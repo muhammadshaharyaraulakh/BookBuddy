@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('cart_id', cartId);
                 formData.append('action', action);
 
-                const res = await fetch('/handlers/cart_update.php', {
+                const res = await fetch('/handlers/cartUpdate.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.append('cart_id', cartId);
 
-                const res = await fetch('/handlers/cart_remove.php', {
+                const res = await fetch('/handlers/cartRemove.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -701,9 +701,13 @@ document.addEventListener('DOMContentLoaded', () => {
         addressListContainer.querySelectorAll('.neo-address-card').forEach(bindAddressCardEvents);
     }
 
-    // Checkout button click handler
+    // Checkout button click handler (Cart)
     if (checkoutBtnActive) {
         checkoutBtnActive.addEventListener('click', () => {
+            window.pendingDailyDealOrder = null;
+            const noticeEl = document.getElementById('modalOrderContextNotice');
+            if (noticeEl) noticeEl.style.display = 'none';
+
             if (window.isUserLoggedIn === false) {
                 window.showNeoToast("Please sign in to your account to place your order.", "warning");
                 setTimeout(() => {
@@ -720,6 +724,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Daily Deal button click handler (Instant Order without adding to cart)
+    const claimDealButtons = document.querySelectorAll('.btn-claim-daily-deal');
+    claimDealButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const dealId = btn.getAttribute('data-deal-id');
+            const bookId = btn.getAttribute('data-book-id');
+            const bookTitle = btn.getAttribute('data-book-title') || 'Daily Deal Book';
+            const dealPrice = btn.getAttribute('data-deal-price') || '';
+
+            window.pendingDailyDealOrder = {
+                deal_id: dealId,
+                book_id: bookId,
+                book_title: bookTitle,
+                deal_price: dealPrice
+            };
+
+            const noticeEl = document.getElementById('modalOrderContextNotice');
+            const noticeText = document.getElementById('modalOrderContextText');
+            if (noticeEl && noticeText) {
+                noticeText.textContent = `Instant Flash Deal: ${bookTitle} ($${dealPrice})`;
+                noticeEl.style.display = 'flex';
+            }
+
+            if (window.isUserLoggedIn === false) {
+                window.showNeoToast("Please sign in to your account to claim this daily deal.", "warning");
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1200);
+                return;
+            }
+
+            const addresses = window.initialUserAddresses || [];
+            if (addresses.length === 0) {
+                openModal(addAddrModal);
+            } else {
+                openModal(selectAddrModal);
+            }
+        });
+    });
 
     // Client-side address field validation
     const validateField = (input, errorEl, rule, message) => {
@@ -839,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Confirm & Place Order Handler
+    // Confirm & Place Order Handler (Cart or Daily Deal)
     if (btnConfirmPlaceOrder) {
         btnConfirmPlaceOrder.addEventListener('click', async () => {
             const selectedRadio = document.querySelector('input[name="selected_delivery_address"]:checked');
@@ -857,7 +903,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.append('address_id', addressId);
 
-                const res = await fetch('/handlers/place_order.php', {
+                let endpoint = '/handlers/placeOrder.php';
+                if (window.pendingDailyDealOrder) {
+                    endpoint = '/handlers/placeDailyDealOrder.php';
+                    if (window.pendingDailyDealOrder.deal_id) {
+                        formData.append('deal_id', window.pendingDailyDealOrder.deal_id);
+                    }
+                    if (window.pendingDailyDealOrder.book_id) {
+                        formData.append('book_id', window.pendingDailyDealOrder.book_id);
+                    }
+                }
+
+                const res = await fetch(endpoint, {
                     method: 'POST',
                     body: formData
                 });

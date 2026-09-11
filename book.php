@@ -39,7 +39,7 @@ $activeDeal = $dealCheck->fetch(PDO::FETCH_OBJ);
 $isOnDailyDeal = ($activeDeal !== false && !empty($activeDeal));
 
 require __DIR__ . "/includes/header.php";
-require __DIR__ . "/includes/navigationbar.php";
+require __DIR__ . "/includes/navigationBar.php";
 ?>
 
 <div class="book-detail-container">
@@ -136,9 +136,20 @@ require __DIR__ . "/includes/navigationbar.php";
             <!-- Section: Book Purchase & Cart Actions -->
             <div class="book-detail-actions">
                 <?php if ($isOnDailyDeal): ?>
-                    <button type="button" class="btn-detail-add-cart" disabled style="opacity: 0.85; cursor: not-allowed; background: #FEF3C7; border: 2.5px solid var(--neo-black); color: #92400E; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <i class="ph-bold ph-lightning"></i> Active Daily Deal (Cannot be added to cart)
-                    </button>
+                    <?php if ($book->Stock <= 0): ?>
+                        <button type="button" class="btn-detail-add-cart" disabled style="opacity: 0.55; cursor: not-allowed; background: var(--neo-gray-muted); border-color: var(--neo-black); color: var(--neo-black); width: 100%;">
+                            <i class="ph-bold ph-prohibit"></i> Daily Deal Sold Out
+                        </button>
+                    <?php else: ?>
+                        <div style="width: 100%;">
+                            <button type="button" class="btn-detail-add-cart btn-claim-daily-deal" data-deal-id="<?= (int)$activeDeal->id ?>" data-book-id="<?= (int)$book->id ?>" data-book-title="<?= htmlspecialchars($book->title, ENT_QUOTES) ?>" data-deal-price="<?= number_format((float)$book->Discount_Price, 2, '.', '') ?>" style="background: var(--neo-yellow); border: 2.5px solid var(--neo-black); color: var(--neo-black); width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; cursor: pointer; box-shadow: var(--neo-shadow);">
+                                <i class="ph-bold ph-lightning"></i> Claim Daily Deal Now &bull; $<?= number_format((float)$book->Discount_Price, 2) ?>
+                            </button>
+                            <div style="font-size: 12px; font-weight: 700; color: #92400E; margin-top: 6px; text-align: center;">
+                                <i class="ph-bold ph-info"></i> Flash Deal: Direct Cash on Delivery order (bypasses cart).
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 <?php elseif ($book->Stock <= 0): ?>
                     <button type="button" class="btn-detail-add-cart" disabled style="opacity: 0.55; cursor: not-allowed; background: var(--neo-gray-muted); border-color: var(--neo-black); color: var(--neo-black);">
                         <i class="ph-bold ph-prohibit"></i> Out of Stock
@@ -193,6 +204,7 @@ require __DIR__ . "/includes/navigationbar.php";
 </div>
 
 <?php
-require __DIR__ . "/includes/footersection.php";
+require __DIR__ . "/includes/addressModals.php";
+require __DIR__ . "/includes/footerSection.php";
 require __DIR__ . "/includes/footer.php";
 ?>
