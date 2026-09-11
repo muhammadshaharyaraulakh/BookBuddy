@@ -1927,3 +1927,426 @@ tbody tr:hover {
     justify-content: center;
     gap: 8px;
 }
+
+/* =========================================================
+   ADMIN ORDERS & ORDER DETAILS STYLES (NEO-BRUTALISM)
+   ========================================================= */
+
+.orders-page-header {
+    margin-bottom: 24px;
+}
+
+.order-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    background: var(--neo-white);
+    color: var(--neo-black);
+    border: var(--neo-border-width) solid var(--neo-black);
+    border-radius: var(--neo-radius-pill);
+    box-shadow: 2px 2px 0px var(--neo-black);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filter-pill:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--neo-black);
+    background: var(--neo-yellow);
+}
+
+.filter-pill.active {
+    background: var(--neo-yellow);
+    box-shadow: 3px 3px 0px var(--neo-black);
+    transform: translate(-1px, -1px);
+}
+
+.filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: var(--neo-radius-pill);
+    background: var(--neo-black);
+    color: var(--neo-white);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.filter-pill.active .filter-count {
+    background: var(--neo-black);
+    color: var(--neo-yellow);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: var(--neo-radius-pill);
+    border: 1.5px solid var(--neo-black);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: capitalize;
+    box-shadow: 1px 1px 0px var(--neo-black);
+}
+
+.status-badge.status-processing {
+    background: var(--neo-yellow);
+    color: var(--neo-black);
+}
+
+.status-badge.status-shipped {
+    background: #93C5FD;
+    color: #1E3A8A;
+}
+
+.status-badge.status-delivered,
+.status-badge.status-completed,
+.status-badge.status-paid {
+    background: #A7F3D0;
+    color: #064E3B;
+}
+
+.status-badge.status-cancelled,
+.status-badge.status-failed {
+    background: #FECDD3;
+    color: #9F1239;
+}
+
+.status-badge.status-returned {
+    background: #FED7AA;
+    color: #7C2D12;
+}
+
+.status-badge.status-pending {
+    background: #F3F4F6;
+    color: #374151;
+}
+
+/* Actions Column in Orders Table */
+.order-actions-cell {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    min-width: 250px;
+}
+
+.order-status-select {
+    padding: 6px 8px;
+    border: 1.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--neo-white);
+    color: var(--neo-black);
+    cursor: pointer;
+}
+
+.btn-icon-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    box-shadow: 2px 2px 0px var(--neo-black);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.btn-icon-square:hover {
+    transform: translate(-1px, -1px);
+}
+
+/* Deleted Catalog Badge */
+.badge-catalog-deleted {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: #FEE2E2;
+    color: #DC2626;
+    border: 1.5px solid #DC2626;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Order Details Page */
+.order-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.order-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.order-info-card {
+    background: var(--neo-white);
+    border: var(--neo-border-width) solid var(--neo-black);
+    border-radius: var(--neo-radius);
+    padding: 20px;
+    box-shadow: var(--neo-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-header-label {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--neo-black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    padding: 4px 0;
+}
+
+.info-title {
+    color: var(--neo-gray-muted);
+    font-weight: 700;
+}
+
+.info-value {
+    color: var(--neo-black);
+    font-weight: 800;
+    text-align: right;
+}
+
+.info-divider {
+    border: none;
+    border-top: 1.5px dashed #D1D5DB;
+    margin: 8px 0;
+}
+
+.address-box {
+    background: var(--neo-cream);
+    border: 1.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-sm);
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--neo-black);
+}
+
+.total-amount-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #ECFDF5;
+    border: 2px solid #059669;
+    border-radius: var(--neo-radius-sm);
+    color: #064E3B;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.total-amount-box strong {
+    font-size: 20px;
+}
+
+.order-item-img {
+    width: 52px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1.5px solid var(--neo-black);
+    background: #FFF;
+    display: block;
+}
+
+.qty-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--neo-gray-light);
+    border: 1.5px solid var(--neo-black);
+    border-radius: var(--neo-radius-pill);
+    font-weight: 800;
+    font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE MEDIA QUERIES DOWN TO 320PX
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .order-details-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .order-filter-bar {
+        gap: 8px;
+    }
+
+    .filter-pill {
+        font-size: 12px;
+        padding: 7px 12px;
+    }
+
+    .table-container {
+        padding: 14px 10px;
+    }
+
+    .order-actions-cell {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-filter-bar {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .filter-pill {
+        width: 100%;
+        justify-content: space-between;
+        padding: 8px 14px;
+    }
+
+    .order-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .order-details-header .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .table-container {
+        padding: 10px 6px;
+        border-radius: 8px;
+    }
+
+    table {
+        min-width: 540px;
+    }
+
+    thead th, tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .order-item-img {
+        width: 40px;
+        height: 56px;
+    }
+}
+
+@media (max-width: 360px) {
+    #content {
+        padding: 12px 6px;
+    }
+
+    .filter-pill {
+        font-size: 11px;
+        padding: 7px 10px;
+    }
+
+    .filter-count {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .order-info-card {
+        padding: 14px 10px;
+    }
+
+    .info-row {
+        font-size: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    .info-value {
+        text-align: left;
+    }
+
+    .total-amount-box {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .total-amount-box strong {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 320px) {
+    #content {
+        padding: 10px 4px;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .table-container {
+        padding: 8px 4px;
+        border-width: 2px;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    .filter-pill {
+        font-size: 11px;
+        gap: 6px;
+    }
+
+    .btn {
+        padding: 7px 10px;
+        font-size: 11px;
+    }
+
+    .order-info-card {
+        padding: 12px 8px;
+    }
+}
+
