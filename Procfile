@@ -1,1 +1,1 @@
-web: php -S 0.0.0.0:$PORT router.php
+web: sh ./docker-entrypoint.sh
