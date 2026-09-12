@@ -31,5 +31,5 @@ RUN chmod +x /var/www/html/docker-entrypoint.sh
 # Expose default port
 EXPOSE 8080
 
-# Execute entrypoint script that safely binds to Railway's $PORT
-ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]
+# Execute entrypoint script safely using sh
+CMD ["sh", "/var/www/html/docker-entrypoint.sh"]
