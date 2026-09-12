@@ -4,6 +4,11 @@
     "type": "project",
     "require": {
         "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
         "phpmailer/phpmailer": "^7.1"
     },
     "config": {
