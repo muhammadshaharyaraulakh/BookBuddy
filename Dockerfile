@@ -1,12 +1,15 @@
 # Official lightweight PHP 8.2 CLI Alpine image
 FROM php:8.2-cli-alpine
 
-# Install system libraries for GD and install pdo_mysql + gd
-# Note: curl, mbstring, and fileinfo are already built into php:8.2-cli-alpine by default
+# Install system libraries for GD, cURL, and MySQL
 RUN apk add --no-cache \
+    curl \
+    curl-dev \
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \
+    libzip-dev \
+    oniguruma-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pdo_mysql gd
 
@@ -22,8 +25,11 @@ COPY . .
 # Install PHP dependencies (production, optimized autoloader)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+# Ensure entrypoint script is executable
+RUN chmod +x /var/www/html/docker-entrypoint.sh
+
 # Expose default port
 EXPOSE 8080
 
-# Start PHP built-in server with router.php listening on dynamic $PORT
-CMD sh -c "php -S 0.0.0.0:\${PORT:-8080} router.php"
+# Execute entrypoint script that safely binds to Railway's $PORT
+ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]
