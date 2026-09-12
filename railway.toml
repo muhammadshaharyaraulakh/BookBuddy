@@ -1,9 +1,10 @@
-# Railway Production Deployment Configuration for BookBuddy
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "sh /var/www/html/docker-entrypoint.sh"
+healthcheckPath = "/"
+healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 5

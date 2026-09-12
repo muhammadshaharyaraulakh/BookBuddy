@@ -1,0 +1,8 @@
+.git
+.gitignore
+.env
+.env.*
+vendor
+*.sql
+.vscode
+storage/*.log

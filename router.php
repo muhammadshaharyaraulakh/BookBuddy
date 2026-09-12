@@ -6,6 +6,35 @@ if (empty($trimmedPath)) {
     $trimmedPath = '/';
 }
 
+// ─── Block Sensitive Files ────────────────────────────────────────────────────
+$blockedPatterns = [
+    '/^\\/\\./',                       // .env, .git, .htaccess, .gitignore etc.
+    '/\\.sql$/i',                      // bookbuddy.sql, any .sql file
+    '/\\.toml$/i',                     // railway.toml
+    '/\\.lock$/i',                     // composer.lock
+    '/Dockerfile/i',                   // Dockerfile
+    '/docker-entrypoint/i',            // docker-entrypoint.sh
+    '/composer\\.(json|lock)$/i',      // composer.json / composer.lock
+    '/seed\\.php$/i',                  // seed.php — prevent unauthenticated DB reseed
+    '/config\\.php$/i',               // config.php — prevent direct access
+    '/config\\.example\\.php$/i',     // config.example.php
+    '/\\.sh$/i',                       // any shell script
+    '/\\.env/i',                       // .env, .env.example, .env.local
+];
+
+foreach ($blockedPatterns as $pattern) {
+    if (preg_match($pattern, $path)) {
+        http_response_code(403);
+        if (file_exists(__DIR__ . '/403.php')) {
+            require __DIR__ . '/403.php';
+        } else {
+            echo '403 Forbidden';
+        }
+        exit;
+    }
+}
+
+// ─── Routes ───────────────────────────────────────────────────────────────────
 $routes = [
     '/login'             => __DIR__ . '/auth/login/login.php',
     '/login.php'         => __DIR__ . '/auth/login/login.php',
@@ -65,6 +94,7 @@ $routes = [
     '/order-details'     => __DIR__ . '/admin/adminPages/orderDetails.php',
 ];
 
+// ─── Named Route Dispatch ─────────────────────────────────────────────────────
 if (isset($routes[$trimmedPath])) {
     $target = $routes[$trimmedPath];
     if (str_contains($target, '/admin/')) {
@@ -75,20 +105,23 @@ if (isset($routes[$trimmedPath])) {
     exit;
 }
 
+// ─── Static File Serving (CSS, JS, Images etc.) ───────────────────────────────
 $requestedFile = __DIR__ . $path;
 if ($path !== '/' && file_exists($requestedFile) && !is_dir($requestedFile)) {
     if (str_contains($requestedFile, '/admin/')) {
         require_once __DIR__ . '/function/function.php';
         protectAdmin();
     }
-    return false;
+    return false; // Let PHP built-in server handle static files
 }
 
+// ─── Homepage ─────────────────────────────────────────────────────────────────
 if ($path === '/' || $path === '/index.php') {
     require __DIR__ . '/index.php';
     exit;
 }
 
+// ─── 404 Fallback ─────────────────────────────────────────────────────────────
 http_response_code(404);
 if (file_exists(__DIR__ . '/404.php')) {
     require __DIR__ . '/404.php';
